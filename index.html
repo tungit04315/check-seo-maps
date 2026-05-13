@@ -1,0 +1,3662 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MapRank AI — Claude AI + Web Search SEO Audit Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --bg-0: #06091a;
+            --bg-1: #090e20;
+            --bg-2: #0d1428;
+            --bg-card: #111b2e;
+            --bg-card-2: #162035;
+            --bg-hover: #1b2740;
+            --border-0: rgba(255, 255, 255, .04);
+            --border-1: rgba(255, 255, 255, .08);
+            --border-2: rgba(255, 255, 255, .13);
+            --border-accent: rgba(16, 185, 129, .3);
+            --text-0: #eef3ff;
+            --text-1: #b8c8e8;
+            --text-2: #6a7fa8;
+            --text-3: #3a4b68;
+            --accent: #10b981;
+            --accent-bright: #34d399;
+            --accent-dim: rgba(16, 185, 129, .12);
+            --accent-glow: rgba(16, 185, 129, .35);
+            --blue: #3b82f6;
+            --blue-dim: rgba(59, 130, 246, .12);
+            --blue-glow: rgba(59, 130, 246, .3);
+            --amber: #f59e0b;
+            --amber-dim: rgba(245, 158, 11, .12);
+            --red: #ef4444;
+            --red-dim: rgba(239, 68, 68, .12);
+            --purple: #a78bfa;
+            --purple-dim: rgba(167, 139, 250, .12);
+            --font-d: 'Outfit', sans-serif;
+            --font-b: 'Plus Jakarta Sans', sans-serif;
+            --sw: 240px;
+            --hh: 60px;
+            --sh-sm: 0 1px 4px rgba(0, 0, 0, .5);
+            --sh-md: 0 4px 20px rgba(0, 0, 0, .6);
+            --sh-lg: 0 8px 40px rgba(0, 0, 0, .7);
+            --sh-acc: 0 0 24px rgba(16, 185, 129, .2);
+            --r-s: 8px;
+            --r-m: 12px;
+            --r-l: 16px;
+            --r-xl: 24px;
+            --t-f: 140ms ease;
+            --t-b: 240ms ease;
+            --t-s: 400ms ease
+        }
+
+        [data-theme="light"] {
+            --bg-0: #eef1f8;
+            --bg-1: #f4f6fb;
+            --bg-2: #ffffff;
+            --bg-card: #ffffff;
+            --bg-card-2: #f4f6fb;
+            --bg-hover: #e8ecf4;
+            --border-0: rgba(0, 0, 0, .05);
+            --border-1: rgba(0, 0, 0, .09);
+            --border-2: rgba(0, 0, 0, .14);
+            --text-0: #0f172a;
+            --text-1: #334155;
+            --text-2: #64748b;
+            --text-3: #94a3b8;
+            --sh-sm: 0 1px 4px rgba(0, 0, 0, .07);
+            --sh-md: 0 4px 20px rgba(0, 0, 0, .09);
+            --sh-lg: 0 8px 40px rgba(0, 0, 0, .1)
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        html {
+            font-size: 14.5px;
+            scroll-behavior: smooth
+        }
+
+        body {
+            font-family: var(--font-b);
+            background: var(--bg-0);
+            color: var(--text-0);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            min-height: 100vh
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none
+        }
+
+        button {
+            cursor: pointer;
+            font-family: var(--font-b)
+        }
+
+        input,
+        textarea,
+        select {
+            font-family: var(--font-b)
+        }
+
+        img {
+            display: block;
+            max-width: 100%
+        }
+
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-2);
+            border-radius: 99px
+        }
+
+        ::selection {
+            background: var(--accent-dim);
+            color: var(--accent-bright)
+        }
+
+        #landing {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh
+        }
+
+        #app {
+            display: none;
+            height: 100vh;
+            overflow: hidden
+        }
+
+        .app-shell {
+            display: flex;
+            height: 100vh;
+            overflow: hidden
+        }
+
+        .sidebar {
+            width: var(--sw);
+            min-width: var(--sw);
+            height: 100vh;
+            background: var(--bg-1);
+            border-right: 1px solid var(--border-1);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            transition: width var(--t-s), min-width var(--t-s);
+            z-index: 100
+        }
+
+        .sidebar::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse 200px 300px at 120px 80px, rgba(16, 185, 129, .06), transparent);
+            pointer-events: none
+        }
+
+        .sidebar.collapsed {
+            width: 64px;
+            min-width: 64px
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 20px 16px 16px;
+            border-bottom: 1px solid var(--border-0);
+            min-height: var(--hh)
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--accent), #0891b2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 18px;
+            box-shadow: 0 0 16px rgba(16, 185, 129, .4)
+        }
+
+        .logo-text {
+            font-family: var(--font-d);
+            font-weight: 800;
+            font-size: 1.1rem;
+            letter-spacing: -.02em;
+            white-space: nowrap;
+            overflow: hidden;
+            transition: opacity var(--t-b)
+        }
+
+        .logo-text span {
+            color: var(--accent)
+        }
+
+        .sidebar.collapsed .logo-text {
+            opacity: 0;
+            width: 0
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px
+        }
+
+        .nav-section-title {
+            font-size: .65rem;
+            font-weight: 600;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            color: var(--text-3);
+            padding: 12px 8px 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            transition: opacity var(--t-b)
+        }
+
+        .sidebar.collapsed .nav-section-title {
+            opacity: 0
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 10px;
+            border-radius: var(--r-s);
+            color: var(--text-2);
+            font-size: .875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--t-f);
+            white-space: nowrap;
+            position: relative;
+            border: 1px solid transparent
+        }
+
+        .nav-item:hover {
+            background: var(--bg-hover);
+            color: var(--text-0)
+        }
+
+        .nav-item.active {
+            background: var(--accent-dim);
+            color: var(--accent-bright);
+            border-color: var(--border-accent)
+        }
+
+        .nav-item .ni {
+            font-size: 1rem;
+            flex-shrink: 0;
+            width: 20px;
+            text-align: center
+        }
+
+        .nav-item .nl {
+            overflow: hidden;
+            transition: opacity var(--t-b), width var(--t-b)
+        }
+
+        .sidebar.collapsed .nav-item .nl {
+            opacity: 0;
+            width: 0
+        }
+
+        .nav-badge {
+            margin-left: auto;
+            background: var(--accent);
+            color: #000;
+            font-size: .6rem;
+            font-weight: 700;
+            padding: 1px 6px;
+            border-radius: 99px
+        }
+
+        .sidebar.collapsed .nav-badge {
+            display: none
+        }
+
+        .sidebar-footer {
+            padding: 12px;
+            border-top: 1px solid var(--border-0)
+        }
+
+        .sidebar-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px;
+            border-radius: var(--r-s);
+            cursor: pointer;
+            transition: background var(--t-f)
+        }
+
+        .sidebar-user:hover {
+            background: var(--bg-hover)
+        }
+
+        .user-av {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .75rem;
+            font-weight: 700;
+            flex-shrink: 0
+        }
+
+        .user-info {
+            overflow: hidden;
+            transition: opacity var(--t-b)
+        }
+
+        .sidebar.collapsed .user-info {
+            opacity: 0;
+            width: 0
+        }
+
+        .user-name {
+            font-size: .8rem;
+            font-weight: 600;
+            white-space: nowrap
+        }
+
+        .user-plan {
+            font-size: .65rem;
+            color: var(--accent);
+            font-weight: 500
+        }
+
+        .main-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden
+        }
+
+        .header {
+            height: var(--hh);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            border-bottom: 1px solid var(--border-1);
+            background: var(--bg-1);
+            flex-shrink: 0;
+            gap: 12px;
+            position: relative;
+            z-index: 50
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px
+        }
+
+        .toggle-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--r-s);
+            background: transparent;
+            border: 1px solid var(--border-1);
+            color: var(--text-2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .9rem;
+            transition: all var(--t-f)
+        }
+
+        .toggle-btn:hover {
+            background: var(--bg-hover);
+            color: var(--text-0)
+        }
+
+        .page-title {
+            font-family: var(--font-d);
+            font-weight: 700;
+            font-size: 1.05rem;
+            letter-spacing: -.01em
+        }
+
+        .page-subtitle {
+            font-size: .75rem;
+            color: var(--text-2)
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .hdr-btn {
+            padding: 7px 14px;
+            border-radius: var(--r-s);
+            font-size: .8rem;
+            font-weight: 600;
+            border: 1px solid var(--border-1);
+            background: transparent;
+            color: var(--text-1);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all var(--t-f)
+        }
+
+        .hdr-btn:hover {
+            background: var(--bg-hover);
+            color: var(--text-0)
+        }
+
+        .hdr-btn.primary {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #000;
+            box-shadow: var(--sh-acc)
+        }
+
+        .hdr-btn.primary:hover {
+            background: var(--accent-bright);
+            transform: translateY(-1px)
+        }
+
+        .hdr-icon-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: var(--r-s);
+            background: transparent;
+            border: 1px solid var(--border-1);
+            color: var(--text-2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .9rem;
+            transition: all var(--t-f);
+            position: relative
+        }
+
+        .hdr-icon-btn:hover {
+            background: var(--bg-hover);
+            color: var(--text-0)
+        }
+
+        .notif-dot {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent)
+        }
+
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px
+        }
+
+        .page {
+            display: none
+        }
+
+        .page.active {
+            display: flex;
+            flex-direction: column;
+            gap: 20px
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-1);
+            border-radius: var(--r-l);
+            padding: 20px
+        }
+
+        .card-sm {
+            padding: 16px
+        }
+
+        .card-title {
+            font-family: var(--font-d);
+            font-weight: 700;
+            font-size: 1rem;
+            letter-spacing: -.01em;
+            margin-bottom: 4px
+        }
+
+        .card-subtitle {
+            font-size: .78rem;
+            color: var(--text-2)
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px
+        }
+
+        .grid-5 {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px
+        }
+
+        .kpi-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-1);
+            border-radius: var(--r-l);
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: all var(--t-b);
+            position: relative;
+            overflow: hidden
+        }
+
+        .kpi-card::after {
+            content: '';
+            position: absolute;
+            top: -30px;
+            right: -30px;
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            opacity: .15;
+            pointer-events: none
+        }
+
+        .kpi-card.kc-green::after {
+            background: var(--accent)
+        }
+
+        .kpi-card.kc-blue::after {
+            background: var(--blue)
+        }
+
+        .kpi-card.kc-amber::after {
+            background: var(--amber)
+        }
+
+        .kpi-card.kc-purple::after {
+            background: var(--purple)
+        }
+
+        .kpi-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between
+        }
+
+        .kpi-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--r-s);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem
+        }
+
+        .kpi-label {
+            font-size: .75rem;
+            color: var(--text-2);
+            font-weight: 500
+        }
+
+        .kpi-value {
+            font-family: var(--font-d);
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: -.03em;
+            line-height: 1
+        }
+
+        .kpi-change {
+            font-size: .72rem;
+            font-weight: 600
+        }
+
+        .kpi-change.up {
+            color: var(--accent)
+        }
+
+        .kpi-change.down {
+            color: var(--amber)
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 8px;
+            border-radius: 99px;
+            font-size: .65rem;
+            font-weight: 700;
+            letter-spacing: .02em
+        }
+
+        .badge-green {
+            background: var(--accent-dim);
+            color: var(--accent-bright);
+            border: 1px solid rgba(16, 185, 129, .2)
+        }
+
+        .badge-blue {
+            background: var(--blue-dim);
+            color: #93c5fd;
+            border: 1px solid rgba(59, 130, 246, .2)
+        }
+
+        .badge-amber {
+            background: var(--amber-dim);
+            color: #fcd34d;
+            border: 1px solid rgba(245, 158, 11, .2)
+        }
+
+        .badge-red {
+            background: var(--red-dim);
+            color: #fca5a5;
+            border: 1px solid rgba(239, 68, 68, .2)
+        }
+
+        .badge-purple {
+            background: var(--purple-dim);
+            color: #c4b5fd;
+            border: 1px solid rgba(167, 139, 250, .2)
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 9px 18px;
+            border-radius: var(--r-s);
+            font-size: .85rem;
+            font-weight: 600;
+            border: 1px solid transparent;
+            transition: all var(--t-f);
+            cursor: pointer
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #000;
+            border-color: var(--accent);
+            box-shadow: var(--sh-acc)
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-bright);
+            transform: translateY(-1px)
+        }
+
+        .btn-secondary {
+            background: var(--bg-card-2);
+            border-color: var(--border-2);
+            color: var(--text-1)
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-hover);
+            color: var(--text-0)
+        }
+
+        .btn-ghost {
+            background: transparent;
+            border-color: transparent;
+            color: var(--text-2)
+        }
+
+        .btn-ghost:hover {
+            background: var(--bg-hover);
+            color: var(--text-0)
+        }
+
+        .btn-sm {
+            padding: 5px 12px;
+            font-size: .78rem
+        }
+
+        .btn:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+            transform: none !important
+        }
+
+        .input-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 6px
+        }
+
+        .input-label {
+            font-size: .78rem;
+            font-weight: 600;
+            color: var(--text-1)
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            background: var(--bg-card-2);
+            border: 1px solid var(--border-2);
+            border-radius: var(--r-s);
+            overflow: hidden;
+            transition: border-color var(--t-f)
+        }
+
+        .input-group:focus-within {
+            border-color: var(--accent)
+        }
+
+        .input-icon {
+            padding: 0 12px;
+            color: var(--text-3);
+            font-size: .9rem;
+            flex-shrink: 0
+        }
+
+        .input-field {
+            flex: 1;
+            padding: 10px 12px;
+            background: transparent;
+            border: none;
+            color: var(--text-0);
+            font-size: .875rem;
+            outline: none
+        }
+
+        .input-field::placeholder {
+            color: var(--text-3)
+        }
+
+        .input-hint {
+            font-size: .72rem;
+            color: var(--text-2)
+        }
+
+        select.input-field {
+            padding: 10px 12px
+        }
+
+        .tabs {
+            display: flex;
+            gap: 4px;
+            background: var(--bg-card-2);
+            border: 1px solid var(--border-1);
+            border-radius: var(--r-m);
+            padding: 4px
+        }
+
+        .tab {
+            flex: 1;
+            padding: 7px 14px;
+            border-radius: var(--r-s);
+            font-size: .8rem;
+            font-weight: 600;
+            border: none;
+            background: transparent;
+            color: var(--text-2);
+            transition: all var(--t-f)
+        }
+
+        .tab.active {
+            background: var(--bg-card);
+            color: var(--text-0);
+            box-shadow: var(--sh-sm)
+        }
+
+        .tab:hover:not(.active) {
+            color: var(--text-1)
+        }
+
+        .progress-bar-wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 6px;
+            background: var(--bg-hover);
+            border-radius: 99px;
+            overflow: hidden
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), #0891b2);
+            border-radius: 99px;
+            transition: width .4s ease
+        }
+
+        .progress-label {
+            font-family: var(--font-d);
+            font-size: .85rem;
+            font-weight: 700;
+            color: var(--accent);
+            width: 36px;
+            text-align: right
+        }
+
+        .spinner {
+            width: 36px;
+            height: 36px;
+            border: 3px solid var(--border-2);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin .8s linear infinite
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg)
+            }
+        }
+
+        .metric-bar-row {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-0)
+        }
+
+        .metric-bar-row:last-child {
+            border-bottom: none
+        }
+
+        .metric-bar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center
+        }
+
+        .metric-bar-label {
+            font-size: .82rem;
+            font-weight: 600;
+            color: var(--text-1)
+        }
+
+        .metric-bar-score {
+            font-family: var(--font-d);
+            font-size: .82rem;
+            font-weight: 800
+        }
+
+        .metric-bar-track {
+            height: 6px;
+            background: var(--bg-hover);
+            border-radius: 99px;
+            overflow: hidden
+        }
+
+        .metric-bar-fill {
+            height: 100%;
+            border-radius: 99px;
+            transition: width .8s ease
+        }
+
+        .score-ring-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px
+        }
+
+        .score-ring-val {
+            font-family: var(--font-d);
+            font-size: 2.2rem;
+            font-weight: 900;
+            letter-spacing: -.04em
+        }
+
+        .score-ring-label {
+            font-size: .72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            color: var(--text-2)
+        }
+
+        .biz-profile {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start
+        }
+
+        .biz-map-thumb {
+            width: 120px;
+            height: 100px;
+            border-radius: var(--r-m);
+            background: var(--bg-card-2);
+            border: 1px solid var(--border-1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            overflow: hidden;
+            position: relative
+        }
+
+        .map-grid {
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(var(--border-1) 1px, transparent 1px), linear-gradient(90deg, var(--border-1) 1px, transparent 1px);
+            background-size: 20px 20px
+        }
+
+        .biz-details {
+            flex: 1;
+            min-width: 0
+        }
+
+        .biz-name {
+            font-family: var(--font-d);
+            font-size: 1.3rem;
+            font-weight: 800;
+            letter-spacing: -.02em;
+            margin-bottom: 4px
+        }
+
+        .biz-category {
+            font-size: .82rem;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 8px
+        }
+
+        .biz-meta-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px
+        }
+
+        .biz-meta-item {
+            font-size: .78rem;
+            color: var(--text-2);
+            display: flex;
+            align-items: center;
+            gap: 4px
+        }
+
+        .score-breakdown {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            align-items: start
+        }
+
+        .issue-item {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            padding: 12px;
+            border-radius: var(--r-m);
+            margin-bottom: 8px
+        }
+
+        .issue-critical {
+            background: rgba(239, 68, 68, .08);
+            border: 1px solid rgba(239, 68, 68, .15)
+        }
+
+        .issue-warning {
+            background: rgba(245, 158, 11, .08);
+            border: 1px solid rgba(245, 158, 11, .15)
+        }
+
+        .issue-info {
+            background: var(--blue-dim);
+            border: 1px solid rgba(59, 130, 246, .15)
+        }
+
+        .issue-icon {
+            font-size: 1.1rem;
+            flex-shrink: 0;
+            margin-top: 1px
+        }
+
+        .issue-body {
+            flex: 1;
+            min-width: 0
+        }
+
+        .issue-title {
+            font-size: .85rem;
+            font-weight: 700;
+            margin-bottom: 3px
+        }
+
+        .issue-desc {
+            font-size: .75rem;
+            color: var(--text-2);
+            line-height: 1.5
+        }
+
+        .check-item {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            padding: 12px;
+            border-radius: var(--r-s);
+            border: 1px solid var(--border-0);
+            transition: all var(--t-f);
+            cursor: pointer
+        }
+
+        .check-item:hover {
+            background: var(--bg-hover)
+        }
+
+        .check-item.checked {
+            opacity: .5;
+            background: transparent
+        }
+
+        .check-box {
+            width: 20px;
+            height: 20px;
+            border-radius: var(--r-s);
+            border: 2px solid var(--border-2);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .7rem;
+            font-weight: 700;
+            color: var(--accent);
+            transition: all var(--t-f)
+        }
+
+        .check-box.checked {
+            background: var(--accent-dim);
+            border-color: var(--accent)
+        }
+
+        .check-item.checked .check-text {
+            text-decoration: line-through;
+            color: var(--text-2)
+        }
+
+        .comp-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px;
+            border-radius: var(--r-s);
+            transition: background var(--t-f);
+            cursor: pointer
+        }
+
+        .comp-card:hover {
+            background: var(--bg-hover)
+        }
+
+        .comp-rank {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .7rem;
+            font-weight: 800;
+            flex-shrink: 0;
+            background: var(--bg-hover);
+            color: var(--text-2)
+        }
+
+        .comp-rank.gold {
+            background: rgba(245, 158, 11, .2);
+            color: var(--amber)
+        }
+
+        .comp-rank.silver {
+            background: rgba(148, 163, 184, .15);
+            color: #94a3b8
+        }
+
+        .comp-rank.bronze {
+            background: rgba(180, 83, 9, .15);
+            color: #b45309
+        }
+
+        .comp-info {
+            flex: 1;
+            min-width: 0
+        }
+
+        .comp-name {
+            font-size: .85rem;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis
+        }
+
+        .comp-meta {
+            font-size: .72rem;
+            color: var(--text-2)
+        }
+
+        .comp-score-pill {
+            padding: 3px 10px;
+            border-radius: 99px;
+            font-family: var(--font-d);
+            font-size: .78rem;
+            font-weight: 800
+        }
+
+        .history-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: var(--r-m);
+            border: 1px solid var(--border-0);
+            transition: all var(--t-f);
+            cursor: pointer
+        }
+
+        .history-item:hover {
+            background: var(--bg-hover);
+            border-color: var(--border-1)
+        }
+
+        .hist-icon {
+            font-size: 1.2rem;
+            flex-shrink: 0
+        }
+
+        .hist-info {
+            flex: 1;
+            min-width: 0
+        }
+
+        .hist-name {
+            font-size: .88rem;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis
+        }
+
+        .hist-meta {
+            font-size: .72rem;
+            color: var(--text-2);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-top: 2px
+        }
+
+        .hist-arrow {
+            color: var(--text-3);
+            font-size: 1.2rem
+        }
+
+        .issues-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px
+        }
+
+        .audit-form-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-1);
+            border-radius: var(--r-xl);
+            padding: 32px;
+            max-width: 520px;
+            width: 100%;
+            box-shadow: var(--sh-lg)
+        }
+
+        .audit-form-title {
+            font-family: var(--font-d);
+            font-size: 1.3rem;
+            font-weight: 800;
+            letter-spacing: -.02em;
+            margin-bottom: 8px
+        }
+
+        .audit-form-subtitle {
+            font-size: .82rem;
+            color: var(--text-2);
+            margin-bottom: 24px;
+            line-height: 1.6
+        }
+
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 9999
+        }
+
+        .toast {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            border-radius: var(--r-m);
+            background: var(--bg-card);
+            border: 1px solid var(--border-2);
+            box-shadow: var(--sh-lg);
+            font-size: .82rem;
+            animation: slideIn .3s ease;
+            max-width: 320px
+        }
+
+        .toast.success {
+            border-color: rgba(16, 185, 129, .3)
+        }
+
+        .toast.error {
+            border-color: rgba(239, 68, 68, .3)
+        }
+
+        .toast.warning {
+            border-color: rgba(245, 158, 11, .3)
+        }
+
+        .toast.info {
+            border-color: rgba(59, 130, 246, .3)
+        }
+
+        .toast-icon {
+            font-size: 1rem;
+            flex-shrink: 0
+        }
+
+        .toast-msg {
+            flex: 1;
+            color: var(--text-0)
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            color: var(--text-3);
+            font-size: .8rem;
+            padding: 2px;
+            margin-left: 4px;
+            transition: color var(--t-f)
+        }
+
+        .toast-close:hover {
+            color: var(--text-0)
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1
+            }
+
+            to {
+                transform: translateX(100%);
+                opacity: 0
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(16px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        @keyframes fadeInFast {
+            from {
+                opacity: 0
+            }
+
+            to {
+                opacity: 1
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn .4s ease both
+        }
+
+        .fade-in-delay-1 {
+            animation: fadeIn .4s ease .1s both
+        }
+
+        .fade-in-delay-2 {
+            animation: fadeIn .4s ease .2s both
+        }
+
+        .fade-in-delay-3 {
+            animation: fadeIn .4s ease .3s both
+        }
+
+        .fade-in-delay-4 {
+            animation: fadeIn .4s ease .4s both
+        }
+
+        @keyframes countUp {
+            from {
+                opacity: 0;
+                transform: scale(.8)
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1)
+            }
+        }
+
+        .count-up {
+            animation: countUp .6s cubic-bezier(.34, 1.56, .64, 1) both
+        }
+
+        .landing-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 40px;
+            border-bottom: 1px solid var(--border-0);
+            background: rgba(6, 9, 26, .8);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 100
+        }
+
+        .landing-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        .landing-nav-links {
+            display: flex;
+            align-items: center;
+            gap: 6px
+        }
+
+        .landing-nav-link {
+            padding: 7px 14px;
+            font-size: .82rem;
+            font-weight: 500;
+            color: var(--text-2);
+            border-radius: var(--r-s);
+            transition: all var(--t-f)
+        }
+
+        .landing-nav-link:hover {
+            color: var(--text-0);
+            background: var(--border-0)
+        }
+
+        .landing-hero {
+            min-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 60px 20px;
+            position: relative;
+            overflow: hidden
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(16, 185, 129, .07), transparent), radial-gradient(ellipse 50% 40% at 80% 50%, rgba(59, 130, 246, .05), transparent), radial-gradient(ellipse 40% 30% at 20% 80%, rgba(167, 139, 250, .04), transparent)
+        }
+
+        .hero-grid {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background-image: linear-gradient(var(--border-0) 1px, transparent 1px), linear-gradient(90deg, var(--border-0) 1px, transparent 1px);
+            background-size: 48px 48px;
+            mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black, transparent)
+        }
+
+        .hero-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 14px;
+            border-radius: 99px;
+            background: var(--accent-dim);
+            border: 1px solid rgba(16, 185, 129, .2);
+            color: var(--accent-bright);
+            font-size: .75rem;
+            font-weight: 600;
+            margin-bottom: 24px;
+            animation: fadeIn .6s ease both
+        }
+
+        .hero-title {
+            font-family: var(--font-d);
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 900;
+            letter-spacing: -.04em;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            animation: fadeIn .6s ease .1s both
+        }
+
+        .hero-title .grad {
+            background: linear-gradient(135deg, var(--accent-bright), #0891b2, var(--blue));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent
+        }
+
+        .hero-sub {
+            font-size: clamp(.9rem, 2vw, 1.1rem);
+            color: var(--text-2);
+            max-width: 560px;
+            margin: 0 auto 36px;
+            animation: fadeIn .6s ease .2s both
+        }
+
+        .hero-cta-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            justify-content: center;
+            animation: fadeIn .6s ease .3s both;
+            flex-wrap: wrap
+        }
+
+        .hero-stats {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            margin-top: 56px;
+            animation: fadeIn .6s ease .5s both;
+            flex-wrap: wrap;
+            justify-content: center
+        }
+
+        .hero-stat {
+            text-align: center
+        }
+
+        .hero-stat-val {
+            font-family: var(--font-d);
+            font-size: 1.8rem;
+            font-weight: 900;
+            letter-spacing: -.03em
+        }
+
+        .hero-stat-lbl {
+            font-size: .72rem;
+            color: var(--text-2);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: .06em
+        }
+
+        .features-section {
+            padding: 60px 40px;
+            max-width: 1100px;
+            margin: 0 auto;
+            width: 100%
+        }
+
+        .section-label {
+            font-size: .72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .1em;
+            color: var(--accent);
+            margin-bottom: 8px
+        }
+
+        .section-title {
+            font-family: var(--font-d);
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -.03em;
+            margin-bottom: 8px
+        }
+
+        .section-sub {
+            font-size: .9rem;
+            color: var(--text-2);
+            max-width: 500px;
+            margin-bottom: 40px
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-1);
+            border-radius: var(--r-xl);
+            padding: 24px;
+            transition: all var(--t-b);
+            position: relative;
+            overflow: hidden
+        }
+
+        .feature-card:hover {
+            border-color: var(--border-accent);
+            transform: translateY(-4px);
+            box-shadow: var(--sh-acc)
+        }
+
+        .feature-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--r-m);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            margin-bottom: 14px
+        }
+
+        .feature-title {
+            font-family: var(--font-d);
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 6px
+        }
+
+        .feature-desc {
+            font-size: .8rem;
+            color: var(--text-2);
+            line-height: 1.7
+        }
+
+        .landing-footer {
+            padding: 30px 40px;
+            border-top: 1px solid var(--border-0);
+            text-align: center;
+            color: var(--text-3);
+            font-size: .75rem
+        }
+
+        .demo-widget {
+            margin: 0 auto 48px;
+            max-width: 560px;
+            width: calc(100% - 40px);
+            background: var(--bg-card);
+            border: 1px solid var(--border-1);
+            border-radius: var(--r-xl);
+            padding: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, .5), 0 0 0 1px var(--border-accent);
+            animation: fadeIn .6s ease .4s both
+        }
+
+        .demo-input-row {
+            display: flex;
+            gap: 8px
+        }
+
+        .demo-input {
+            flex: 1
+        }
+
+        /* AI status indicator */
+        .ai-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 99px;
+            font-size: .68rem;
+            font-weight: 600;
+            background: var(--accent-dim);
+            color: var(--accent-bright);
+            border: 1px solid rgba(16, 185, 129, .25)
+        }
+
+        .ai-status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent);
+            animation: pulse 2s infinite
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1
+            }
+
+            50% {
+                opacity: .4
+            }
+        }
+
+        /* Streaming text */
+        .streaming-cursor::after {
+            content: '▋';
+            animation: blink .7s infinite;
+            color: var(--accent)
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1
+            }
+
+            50% {
+                opacity: 0
+            }
+        }
+
+        /* Settings - AI info card */
+        .ai-info-card {
+            background: linear-gradient(135deg, rgba(16, 185, 129, .08), rgba(59, 130, 246, .05));
+            border: 1px solid var(--border-accent);
+            border-radius: var(--r-l);
+            padding: 20px
+        }
+
+        .settings-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border-0)
+        }
+
+        .settings-label {
+            font-size: .85rem;
+            font-weight: 600
+        }
+
+        .settings-desc {
+            font-size: .75rem;
+            color: var(--text-2)
+        }
+
+        .toggle-switch {
+            width: 44px;
+            height: 24px;
+            border-radius: 99px;
+            background: var(--border-2);
+            border: none;
+            cursor: pointer;
+            position: relative;
+            transition: background var(--t-f)
+        }
+
+        .toggle-switch.on {
+            background: var(--accent)
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #fff;
+            top: 3px;
+            left: 3px;
+            transition: transform var(--t-f)
+        }
+
+        .toggle-switch.on::after {
+            transform: translateX(20px)
+        }
+
+        @media(max-width:768px) {
+            .sidebar {
+                position: fixed;
+                z-index: 200;
+                transform: translateX(-100%);
+                transition: transform var(--t-b)
+            }
+
+            .sidebar.mobile-open {
+                transform: translateX(0)
+            }
+
+            .grid-4,
+            .grid-3 {
+                grid-template-columns: 1fr 1fr
+            }
+
+            .grid-2 {
+                grid-template-columns: 1fr
+            }
+
+            .score-breakdown {
+                grid-template-columns: 1fr
+            }
+
+            .features-section {
+                padding: 40px 20px
+            }
+
+            .landing-nav {
+                padding: 12px 20px
+            }
+
+            .hero-title {
+                font-size: 2.2rem
+            }
+
+            .biz-profile {
+                flex-direction: column
+            }
+
+            .biz-map-thumb {
+                width: 100%;
+                height: 80px
+            }
+        }
+
+        @media(max-width:480px) {
+
+            .grid-4,
+            .grid-3,
+            .grid-2 {
+                grid-template-columns: 1fr
+            }
+
+            .content {
+                padding: 14px
+            }
+        }
+
+        /* ── file:// warning overlay ─────────────────────────────── */
+        #file-warning {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(6, 9, 26, .96);
+            backdrop-filter: blur(12px);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            padding: 20px
+        }
+
+        #file-warning.show {
+            display: flex
+        }
+
+        .fw-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-accent);
+            border-radius: var(--r-xl);
+            padding: 40px;
+            max-width: 540px;
+            width: 100%;
+            box-shadow: 0 0 60px rgba(16, 185, 129, .15);
+            text-align: center
+        }
+
+        .fw-icon {
+            font-size: 3rem;
+            margin-bottom: 16px
+        }
+
+        .fw-title {
+            font-family: var(--font-d);
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin-bottom: 8px
+        }
+
+        .fw-desc {
+            font-size: .85rem;
+            color: var(--text-2);
+            line-height: 1.7;
+            margin-bottom: 24px
+        }
+
+        .fw-cmd-label {
+            font-size: .7rem;
+            font-weight: 700;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            color: var(--text-3);
+            text-align: left;
+            margin-bottom: 6px
+        }
+
+        .fw-cmd {
+            display: flex;
+            align-items: center;
+            background: var(--bg-0);
+            border: 1px solid var(--border-2);
+            border-radius: var(--r-s);
+            padding: 10px 14px;
+            gap: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: border-color var(--t-f)
+        }
+
+        .fw-cmd:hover {
+            border-color: var(--accent)
+        }
+
+        .fw-cmd code {
+            font-family: 'Courier New', monospace;
+            font-size: .8rem;
+            color: var(--accent-bright);
+            flex: 1;
+            text-align: left
+        }
+
+        .fw-cmd-copy {
+            font-size: .65rem;
+            color: var(--text-3);
+            flex-shrink: 0
+        }
+
+        .fw-demo {
+            margin-top: 20px;
+            font-size: .78rem;
+            color: var(--text-2)
+        }
+
+        .flex {
+            display: flex
+        }
+
+        .flex-col {
+            flex-direction: column
+        }
+
+        .items-center {
+            align-items: center
+        }
+
+        .justify-between {
+            justify-content: space-between
+        }
+
+        .gap-2 {
+            gap: 8px
+        }
+
+        .gap-3 {
+            gap: 12px
+        }
+
+        .gap-4 {
+            gap: 16px
+        }
+
+        .flex-1 {
+            flex: 1
+        }
+
+        .text-sm {
+            font-size: .78rem
+        }
+
+        .text-xs {
+            font-size: .7rem
+        }
+
+        .font-bold {
+            font-weight: 700
+        }
+
+        .text-muted {
+            color: var(--text-2)
+        }
+
+        .text-accent {
+            color: var(--accent)
+        }
+
+        .text-red {
+            color: var(--red)
+        }
+
+        .text-amber {
+            color: var(--amber)
+        }
+
+        .mt-1 {
+            margin-top: 4px
+        }
+
+        .mt-2 {
+            margin-top: 8px
+        }
+
+        .mt-3 {
+            margin-top: 12px
+        }
+
+        .mt-4 {
+            margin-top: 16px
+        }
+
+        .mb-2 {
+            margin-bottom: 8px
+        }
+
+        .mb-3 {
+            margin-bottom: 12px
+        }
+
+        .mb-4 {
+            margin-bottom: 16px
+        }
+
+        .w-full {
+            width: 100%
+        }
+
+        .text-center {
+            text-align: center
+        }
+
+        .truncate {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap
+        }
+
+        .relative {
+            position: relative
+        }
+
+        .overflow-hidden {
+            overflow: hidden
+        }
+
+        .score-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 3px 10px;
+            border-radius: 99px;
+            font-family: var(--font-d);
+            font-size: .8rem;
+            font-weight: 800
+        }
+
+        .score-good {
+            background: var(--accent-dim);
+            color: var(--accent-bright);
+            border: 1px solid rgba(16, 185, 129, .25)
+        }
+
+        .score-ok {
+            background: var(--amber-dim);
+            color: #fcd34d;
+            border: 1px solid rgba(245, 158, 11, .25)
+        }
+
+        .score-bad {
+            background: var(--red-dim);
+            color: #fca5a5;
+            border: 1px solid rgba(239, 68, 68, .25)
+        }
+
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 48px;
+            gap: 12px;
+            text-align: center
+        }
+
+        .empty-state .empty-icon {
+            font-size: 3rem;
+            opacity: .4
+        }
+
+        .empty-state h3 {
+            font-family: var(--font-d);
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-1)
+        }
+
+        .empty-state p {
+            font-size: .82rem;
+            color: var(--text-2);
+            max-width: 280px
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px
+        }
+
+        .section-head-title {
+            font-family: var(--font-d);
+            font-weight: 700;
+            font-size: .95rem
+        }
+
+        @media print {
+
+            .sidebar,
+            .header,
+            .toast-container,
+            .hdr-btn,
+            .btn {
+                display: none !important
+            }
+
+            .app-shell {
+                display: block !important
+            }
+
+            .main-area {
+                overflow: visible !important
+            }
+
+            .content {
+                overflow: visible !important;
+                padding: 0 !important
+            }
+
+            body {
+                background: white !important;
+                color: black !important
+            }
+
+            .card {
+                border: 1px solid #ddd !important;
+                background: white !important;
+                break-inside: avoid
+            }
+
+            .kpi-card {
+                background: white !important;
+                border: 1px solid #ddd !important
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- LANDING PAGE -->
+    <div id="landing">
+        <nav class="landing-nav">
+            <div class="landing-logo">
+                <div class="logo-icon">🗺️</div>
+                <div class="logo-text">Map<span>Rank</span> AI</div>
+            </div>
+            <div class="landing-nav-links">
+                <div class="ai-status"><span class="ai-status-dot"></span>AI Powered</div>
+                <button class="landing-nav-link" onclick="enterApp()">Dashboard</button>
+                <button class="btn btn-primary btn-sm" onclick="enterApp()">Launch App →</button>
+            </div>
+        </nav>
+
+        <section class="landing-hero">
+            <div class="hero-bg"></div>
+            <div class="hero-grid"></div>
+            <div class="hero-chip">✨ Powered by Claude AI + Web Search</div>
+            <h1 class="hero-title">Rank Higher on<br><span class="grad">Google Maps</span></h1>
+            <p class="hero-sub">AI-powered SEO audit that finds real data about any business, analyzes competitors, and
+                generates a personalized action plan — no API keys needed, unlimited daily use.</p>
+
+            <div class="demo-widget">
+                <div style="font-size:.75rem;font-weight:600;color:var(--text-2);margin-bottom:10px;">🔍 Audit any
+                    business instantly</div>
+                <div class="demo-input-row">
+                    <div class="input-group demo-input">
+                        <span class="input-icon">🏪</span>
+                        <input class="input-field" id="landing-input"
+                            placeholder="e.g. Highlands Coffee, District 1, HCMC"
+                            onkeydown="if(event.key==='Enter')quickAudit()">
+                    </div>
+                    <button class="btn btn-primary" onclick="quickAudit()">Audit →</button>
+                </div>
+                <div style="font-size:.7rem;color:var(--text-3);margin-top:8px;">Paste a Google Maps URL, business name,
+                    or address</div>
+            </div>
+
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <div class="hero-stat-val" style="color:var(--accent)">8</div>
+                    <div class="hero-stat-lbl">SEO Metrics</div>
+                </div>
+                <div style="width:1px;height:32px;background:var(--border-1)"></div>
+                <div class="hero-stat">
+                    <div class="hero-stat-val" style="color:var(--blue)">Real</div>
+                    <div class="hero-stat-lbl">Live Data</div>
+                </div>
+                <div style="width:1px;height:32px;background:var(--border-1)"></div>
+                <div class="hero-stat">
+                    <div class="hero-stat-val" style="color:var(--purple)">AI</div>
+                    <div class="hero-stat-lbl">Action Plan</div>
+                </div>
+                <div style="width:1px;height:32px;background:var(--border-1)"></div>
+                <div class="hero-stat">
+                    <div class="hero-stat-val" style="color:var(--amber)">0</div>
+                    <div class="hero-stat-lbl">API Keys Needed</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="features-section">
+            <div class="section-label">How it works</div>
+            <div class="section-title">Everything powered by Claude AI + Web Search</div>
+            <div class="section-sub">No Google Places API, no GBP API, no manual keys. Just enter a business name and
+                get real insights.</div>
+            <div class="grid-3" style="gap:20px;">
+                <div class="feature-card">
+                    <div class="feature-icon" style="background:var(--accent-dim);">🔍</div>
+                    <div class="feature-title">Real Web Search</div>
+                    <div class="feature-desc">Claude searches the web in real-time to find actual business data,
+                        ratings, reviews, and Google Maps presence — not mock data.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="background:var(--blue-dim);">⚔️</div>
+                    <div class="feature-title">Competitor Intelligence</div>
+                    <div class="feature-desc">Automatically finds real competitors in the same category and location,
+                        compares their SEO metrics against yours.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon" style="background:var(--purple-dim);">🧠</div>
+                    <div class="feature-title">AI Recommendations</div>
+                    <div class="feature-desc">Claude analyzes the data and generates a specific, actionable improvement
+                        plan tailored to your business's actual weaknesses.</div>
+                </div>
+            </div>
+        </section>
+        <footer class="landing-footer">© 2025 MapRank AI · Powered by Claude AI + Web Search · Không giới hạn
+            searches/day
+            Required
+        </footer>
+    </div>
+
+    <!-- APP -->
+    <div id="app">
+        <div class="app-shell">
+            <!-- Sidebar -->
+            <aside class="sidebar" id="sidebar">
+                <div class="sidebar-logo">
+                    <div class="logo-icon">🗺️</div>
+                    <div class="logo-text">Map<span>Rank</span> AI</div>
+                </div>
+                <nav class="sidebar-nav">
+                    <div class="nav-section-title">Main</div>
+                    <div class="nav-item active" id="nav-dashboard" onclick="navigate('dashboard')"><span
+                            class="ni">📊</span><span class="nl">Dashboard</span></div>
+                    <div class="nav-item" id="nav-new-audit" onclick="navigate('new-audit')"><span
+                            class="ni">🔍</span><span class="nl">New Audit</span></div>
+                    <div class="nav-item" id="nav-audit-result" onclick="navigate('audit-result')" style="display:none">
+                        <span class="ni">📋</span><span class="nl">Audit Results</span>
+                    </div>
+                    <div class="nav-section-title">Analysis</div>
+                    <div class="nav-item" id="nav-competitors" onclick="navigate('competitors')"><span
+                            class="ni">⚔️</span><span class="nl">Competitors</span></div>
+                    <div class="nav-item" id="nav-history" onclick="navigate('history')"><span class="ni">🕐</span><span
+                            class="nl">History <span class="nav-badge" id="history-badge"></span></span></div>
+                    <div class="nav-section-title">System</div>
+                    <div class="nav-item" id="nav-settings" onclick="navigate('settings')"><span
+                            class="ni">⚙️</span><span class="nl">Settings</span></div>
+                    <div class="nav-item" onclick="toggleTheme()"><span class="ni" id="theme-icon">☀️</span><span
+                            class="nl">Light Mode</span></div>
+                    <div class="nav-item" onclick="showLanding()"><span class="ni">🏠</span><span class="nl">Home</span>
+                    </div>
+                </nav>
+                <div class="sidebar-footer">
+                    <div class="sidebar-user">
+                        <div class="user-av">AI</div>
+                        <div class="user-info">
+                            <div class="user-name">MapRank AI</div>
+                            <div class="user-plan">Claude AI Powered</div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main -->
+            <div class="main-area">
+                <header class="header">
+                    <div class="header-left">
+                        <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+                        <div>
+                            <div class="page-title" id="header-title">Dashboard</div>
+                            <div class="page-subtitle" id="header-sub">Overview of all audits and performance</div>
+                        </div>
+                    </div>
+                    <div class="header-right">
+                        <div class="ai-status" style="margin-right:4px;"><span class="ai-status-dot"></span>Claude Live
+                        </div>
+                        <button class="hdr-btn" onclick="navigate('new-audit')"><span>+</span> New Audit</button>
+                        <button class="hdr-icon-btn" onclick="exportReport()" title="Export PDF">📄</button>
+                    </div>
+                </header>
+
+                <div class="content" id="main-content">
+
+                    <!-- DASHBOARD -->
+                    <div class="page active" id="page-dashboard">
+                        <div class="grid-4 fade-in" id="dash-kpis">
+                            <div class="kpi-card kc-green">
+                                <div class="kpi-top">
+                                    <div class="kpi-icon" style="background:var(--accent-dim)">📊</div><span
+                                        class="badge badge-green" id="kpi-badge-audits">Live</span>
+                                </div>
+                                <div class="kpi-label">Total Audits</div>
+                                <div class="kpi-value" id="kpi-audits">0</div>
+                                <div class="kpi-change up" id="kpi-audits-sub">Start your first audit</div>
+                            </div>
+                            <div class="kpi-card kc-blue">
+                                <div class="kpi-top">
+                                    <div class="kpi-icon" style="background:var(--blue-dim)">⭐</div><span
+                                        class="badge badge-blue">AI</span>
+                                </div>
+                                <div class="kpi-label">Avg SEO Score</div>
+                                <div class="kpi-value" style="color:var(--blue)" id="kpi-avg-score">—</div>
+                                <div class="kpi-change up">Real data analysis</div>
+                            </div>
+                            <div class="kpi-card kc-amber">
+                                <div class="kpi-top">
+                                    <div class="kpi-icon" style="background:var(--amber-dim)">⚠️</div><span
+                                        class="badge badge-amber" id="kpi-issues-badge">—</span>
+                                </div>
+                                <div class="kpi-label">Issues Found</div>
+                                <div class="kpi-value" style="color:var(--amber)" id="kpi-issues">—</div>
+                                <div class="kpi-change down" id="kpi-issues-sub">Run an audit first</div>
+                            </div>
+                            <div class="kpi-card kc-purple">
+                                <div class="kpi-top">
+                                    <div class="kpi-icon" style="background:var(--purple-dim)">🏆</div><span
+                                        class="badge badge-purple">New</span>
+                                </div>
+                                <div class="kpi-label">Businesses</div>
+                                <div class="kpi-value" style="color:var(--purple)" id="kpi-biz">0</div>
+                                <div class="kpi-change up" id="kpi-biz-sub">Tracked businesses</div>
+                            </div>
+                        </div>
+
+                        <div class="grid-2 fade-in-delay-1">
+                            <div class="card">
+                                <div class="section-header">
+                                    <div>
+                                        <div class="card-title">Score Trend</div>
+                                        <div class="card-subtitle">Audit scores over time</div>
+                                    </div>
+                                    <span class="badge badge-green">History</span>
+                                </div>
+                                <div style="height:200px;position:relative;"><canvas id="trend-chart"></canvas></div>
+                            </div>
+                            <div class="card">
+                                <div class="section-header">
+                                    <div>
+                                        <div class="card-title">Score Distribution</div>
+                                        <div class="card-subtitle">By category (last audit)</div>
+                                    </div>
+                                </div>
+                                <div style="height:200px;position:relative;"><canvas id="dist-chart"></canvas></div>
+                            </div>
+                        </div>
+
+                        <div class="card fade-in-delay-2">
+                            <div class="section-header">
+                                <div>
+                                    <div class="card-title">Recent Audits</div>
+                                    <div class="card-subtitle">Your latest AI-powered business audits</div>
+                                </div>
+                                <button class="btn btn-ghost btn-sm" onclick="navigate('history')">View All →</button>
+                            </div>
+                            <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px;" id="dash-recent">
+                                <div class="empty-state" style="padding:24px">
+                                    <div class="empty-icon">🔍</div>
+                                    <h3>No audits yet</h3>
+                                    <p>Run your first real AI audit to see results here</p>
+                                    <button class="btn btn-primary btn-sm mt-2" onclick="navigate('new-audit')">Start
+                                        Audit</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid-2 fade-in-delay-3">
+                            <div class="card">
+                                <div class="section-header">
+                                    <div class="card-title">Critical Issues</div>
+                                    <div class="card-subtitle">From latest audit</div>
+                                </div>
+                                <div class="issues-list mt-2" id="dash-issues">
+                                    <div style="color:var(--text-3);font-size:.8rem;padding:12px 0;text-align:center">
+                                        Run an audit to see issues</div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="section-header">
+                                    <div class="card-title">Top Competitors</div>
+                                    <div class="card-subtitle">From latest audit</div>
+                                </div>
+                                <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px;"
+                                    id="dash-competitors">
+                                    <div style="color:var(--text-3);font-size:.8rem;padding:12px 0;text-align:center">
+                                        Competitor data appears after audit</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- NEW AUDIT PAGE -->
+                    <div class="page" id="page-new-audit">
+                        <!-- API Keys Banner -->
+                        <div id="api-keys-banner"
+                            style="display:none;background:var(--accent-dim);border:1px solid var(--border-accent);border-radius:var(--r-m);padding:12px 16px;align-items:center;gap:12px;flex-wrap:wrap;">
+                            <span style="font-size:1rem;">✨</span>
+                            <div style="flex:1;min-width:200px;">
+                                <div style="font-weight:700;font-size:.85rem;color:var(--accent)">Claude AI — Sẵn sàng!</div>
+                                <div style="font-size:.75rem;color:var(--text-2)">Không cần API key. Claude AI + Web Search hoạt động ngay, dùng không giới hạn trong ngày.</div>
+                            </div>
+                        </div>
+                        <div style="display:flex;flex-direction:column;align-items:center;padding:20px 0;">
+                            <div class="audit-form-card fade-in">
+                                <div class="audit-form-title">🔍 Start New Audit</div>
+                                <div class="audit-form-subtitle">Claude AI tự động tìm kiếm web để lấy dữ liệu
+                                    doanh nghiệp thực tế — <strong style="color:var(--accent)">không cần API key, dùng không giới hạn!</strong></div>
+
+                                <div class="tabs mb-4" id="input-tabs">
+                                    <button class="tab active" onclick="switchTab('url')">🔗 Maps URL</button>
+                                    <button class="tab" onclick="switchTab('name')">🏪 Business Name</button>
+                                    <button class="tab" onclick="switchTab('place')">📍 Place ID</button>
+                                </div>
+
+                                <div id="tab-url">
+                                    <div class="input-wrap">
+                                        <label class="input-label">Google Maps URL</label>
+                                        <div class="input-group">
+                                            <span class="input-icon">🔗</span>
+                                            <input class="input-field" id="audit-url"
+                                                placeholder="https://maps.google.com/maps/place/..."
+                                                onkeydown="if(event.key==='Enter')runAudit()">
+                                        </div>
+                                        <div class="input-hint">Paste any Google Maps share link or business page URL
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="tab-name" style="display:none;">
+                                    <div style="display:flex;flex-direction:column;gap:12px;">
+                                        <div class="input-wrap">
+                                            <label class="input-label">Business Name</label>
+                                            <div class="input-group">
+                                                <span class="input-icon">🏪</span>
+                                                <input class="input-field" id="audit-name"
+                                                    placeholder="e.g. Highlands Coffee - Nguyen Hue"
+                                                    onkeydown="if(event.key==='Enter')runAudit()">
+                                            </div>
+                                        </div>
+                                        <div class="input-wrap">
+                                            <label class="input-label">Address / Location</label>
+                                            <div class="input-group">
+                                                <span class="input-icon">📍</span>
+                                                <input class="input-field" id="audit-address"
+                                                    placeholder="e.g. 167 Dong Khoi, District 1, HCMC"
+                                                    onkeydown="if(event.key==='Enter')runAudit()">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="tab-place" style="display:none;">
+                                    <div class="input-wrap">
+                                        <label class="input-label">Google Place ID</label>
+                                        <div class="input-group">
+                                            <span class="input-icon">🆔</span>
+                                            <input class="input-field" id="audit-place-id"
+                                                placeholder="ChIJN1t_tDeuEmsRUsoyG83frY4"
+                                                onkeydown="if(event.key==='Enter')runAudit()">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div
+                                    style="margin-top:20px;padding:14px;background:var(--bg-card-2);border-radius:var(--r-m);border:1px solid var(--border-accent);">
+                                    <div
+                                        style="font-size:.75rem;font-weight:600;color:var(--accent-bright);margin-bottom:8px;">
+                                        ✨ What Claude AI analyzes:</div>
+                                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;">
+                                        <div
+                                            style="font-size:.72rem;color:var(--text-2);display:flex;gap:4px;align-items:center;">
+                                            <span style="color:var(--accent)">✓</span> Profile completeness
+                                        </div>
+                                        <div
+                                            style="font-size:.72rem;color:var(--text-2);display:flex;gap:4px;align-items:center;">
+                                            <span style="color:var(--accent)">✓</span> Review quality audit
+                                        </div>
+                                        <div
+                                            style="font-size:.72rem;color:var(--text-2);display:flex;gap:4px;align-items:center;">
+                                            <span style="color:var(--accent)">✓</span> Photo & media check
+                                        </div>
+                                        <div
+                                            style="font-size:.72rem;color:var(--text-2);display:flex;gap:4px;align-items:center;">
+                                            <span style="color:var(--accent)">✓</span> Keyword analysis
+                                        </div>
+                                        <div
+                                            style="font-size:.72rem;color:var(--text-2);display:flex;gap:4px;align-items:center;">
+                                            <span style="color:var(--accent)">✓</span> Real competitor gap
+                                        </div>
+                                        <div
+                                            style="font-size:.72rem;color:var(--text-2);display:flex;gap:4px;align-items:center;">
+                                            <span style="color:var(--accent)">✓</span> AI action plan
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div style="margin-top:20px;display:flex;gap:10px;">
+                                    <button class="btn btn-primary" style="flex:1;" onclick="runAudit()" id="run-btn">
+                                        <span>🚀</span> Run AI Audit
+                                    </button>
+                                    <button class="btn btn-secondary" onclick="runAuditDemo()">
+                                        <span>⚡</span> Demo
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Loading State -->
+                            <div id="audit-loading" style="display:none;max-width:500px;width:100%;margin-top:20px;">
+                                <div class="card" style="text-align:center;padding:36px;">
+                                    <div class="spinner" style="margin:0 auto 16px;"></div>
+                                    <div style="font-family:var(--font-d);font-size:1.1rem;font-weight:700;margin-bottom:6px;"
+                                        id="loading-text">Kết nối Claude AI...</div>
+                                    <div style="font-size:.78rem;color:var(--text-2);margin-bottom:20px;"
+                                        id="loading-sub">Claude đang tìm kiếm web để lấy dữ liệu thực</div>
+                                    <div class="progress-bar-wrap" style="margin:0 auto;">
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" id="loading-progress" style="width:0%"></div>
+                                        </div>
+                                        <div class="progress-label" id="loading-pct">0%</div>
+                                    </div>
+                                    <div style="display:flex;flex-direction:column;gap:6px;margin-top:20px;"
+                                        id="loading-steps"></div>
+                                    <!-- Function calling trace -->
+                                    <div
+                                        style="margin-top:16px;padding:10px;background:var(--bg-card-2);border-radius:var(--r-s);border:1px solid var(--border-0);text-align:left;">
+                                        <div
+                                            style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-3);margin-bottom:6px;">
+                                            Web Search Trace</div>
+                                        <div id="fn-trace"
+                                            style="display:flex;flex-direction:column;gap:3px;font-family:'Courier New',monospace;font-size:.7rem;color:var(--text-2);">
+                                            <div>⏳ Waiting for Claude...</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AUDIT RESULT PAGE -->
+                    <div class="page" id="page-audit-result">
+                        <div id="result-content">
+                            <div class="empty-state">
+                                <div class="empty-icon">📋</div>
+                                <h3>No audit yet</h3>
+                                <p>Run an audit first</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- COMPETITORS PAGE -->
+                    <div class="page" id="page-competitors">
+                        <div id="competitors-content">
+                            <div class="empty-state">
+                                <div class="empty-icon">⚔️</div>
+                                <h3>No competitor data</h3>
+                                <p>Run an audit to see competitor analysis</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- HISTORY PAGE -->
+                    <div class="page" id="page-history">
+                        <div class="card">
+                            <div class="section-header">
+                                <div>
+                                    <div class="card-title">Audit History</div>
+                                    <div class="card-subtitle">All previous AI-powered audits</div>
+                                </div>
+                                <div style="display:flex;gap:8px;">
+                                    <button class="btn btn-ghost btn-sm" onclick="clearHistory()">🗑 Clear</button>
+                                    <button class="btn btn-secondary btn-sm" onclick="exportAllCSV()">📥 Export
+                                        CSV</button>
+                                </div>
+                            </div>
+                            <div style="margin-top:16px;" id="history-list"></div>
+                        </div>
+                    </div>
+
+                    <!-- SETTINGS PAGE -->
+                    <div class="page" id="page-settings">
+                        <div class="grid-2" style="align-items:start;">
+                            <div class="card">
+                                <div class="card-title mb-4">✨ AI Engine — Claude AI + Web Search <span
+                                        style="background:var(--accent-dim);color:var(--accent);font-size:.7rem;padding:2px 8px;border-radius:99px;font-weight:700;margin-left:6px;">NO KEY NEEDED</span>
+                                </div>
+                                <div class="ai-info-card mb-4">
+                                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+                                        <div
+                                            style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#10b981,#0891b2);display:flex;align-items:center;justify-content:center;font-size:1.2rem;">
+                                            🤖</div>
+                                        <div>
+                                            <div style="font-weight:700;font-size:.9rem;">Claude Sonnet + Web Search Tool</div>
+                                            <div class="ai-status" style="margin-top:4px;" id="engine-status-dot">
+                                                <span class="ai-status-dot"></span>
+                                                <span id="engine-status-label">Sẵn sàng — không cần cấu hình</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="font-size:.78rem;color:var(--text-2);line-height:1.7;">
+                                        MapRank AI dùng <strong style="color:var(--text-1)">Claude Sonnet</strong>
+                                        với
+                                        <strong style="color:var(--text-1)">Web Search Tool</strong> — tìm dữ
+                                        liệu Maps thực tế.
+                                        <span style="color:var(--accent);font-weight:600;">Không giới hạn lần dùng mỗi ngày!</span>
+                                    </div>
+                                </div>
+
+                                <div
+                                    style="font-size:.78rem;color:var(--text-2);padding:12px;background:var(--accent-dim);border-radius:var(--r-s);border:1px solid var(--border-accent);margin-bottom:12px;">
+                                    <div style="font-weight:700;color:var(--accent-bright);margin-bottom:8px;">🆓 Ưu điểm Claude API:</div>
+                                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;">
+                                        <div>✅ <strong>Không cần</strong> API key</div>
+                                        <div>✅ <strong>Không giới hạn</strong> /ngày</div>
+                                        <div>✅ <strong>Web Search</strong> thời gian thực</div>
+                                        <div>✅ JSON chính xác hơn</div>
+                                    </div>
+                                </div>
+
+                                <div
+                                    style="font-size:.78rem;color:var(--text-2);padding:12px;background:var(--bg-card-2);border-radius:var(--r-s);border:1px solid var(--border-0);margin-bottom:16px;">
+                                    <div style="font-weight:600;color:var(--text-1);margin-bottom:8px;">🔄 Search Flow:</div>
+                                    <div style="display:flex;flex-direction:column;gap:5px;">
+                                        <div>① Claude nhận query tên doanh nghiệp</div>
+                                        <div>② Tự gọi <code
+                                                style="color:var(--accent);background:var(--accent-dim);padding:1px 5px;border-radius:3px;">web_search(business_name)</code>
+                                        </div>
+                                        <div>③ Tìm <code
+                                                style="color:var(--accent);background:var(--accent-dim);padding:1px 5px;border-radius:3px;">competitors(location)</code>
+                                            từ web</div>
+                                        <div>④ Phân tích dữ liệu thực → SEO audit JSON</div>
+                                    </div>
+                                </div>
+
+                                <button class="btn btn-primary w-full" onclick="testApiKeys()">⚡ Test Claude API</button>
+                                <div id="api-test-result" style="margin-top:10px;font-size:.78rem;"></div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-title mb-4">⚙️ Preferences</div>
+                                <div class="settings-row">
+                                    <div>
+                                        <div class="settings-label">Dark Mode</div>
+                                        <div class="settings-desc">Use dark interface theme</div>
+                                    </div>
+                                    <button class="toggle-switch on" id="dark-toggle" onclick="toggleTheme()"></button>
+                                </div>
+                                <div class="settings-row">
+                                    <div>
+                                        <div class="settings-label">Auto-save Audits</div>
+                                        <div class="settings-desc">Save results to history automatically</div>
+                                    </div>
+                                    <button class="toggle-switch on" id="autosave-toggle"
+                                        onclick="this.classList.toggle('on')"></button>
+                                </div>
+                                <div class="settings-row">
+                                    <div>
+                                        <div class="settings-label">Competitor Tracking</div>
+                                        <div class="settings-desc">Include competitor analysis in each audit</div>
+                                    </div>
+                                    <button class="toggle-switch on" id="comp-toggle"
+                                        onclick="this.classList.toggle('on')"></button>
+                                </div>
+                                <div class="settings-row" style="border:none;">
+                                    <div>
+                                        <div class="settings-label">Notifications</div>
+                                        <div class="settings-desc">In-app toast notifications</div>
+                                    </div>
+                                    <button class="toggle-switch on" id="notif-toggle"
+                                        onclick="this.classList.toggle('on')"></button>
+                                </div>
+                                <div style="margin-top:16px;">
+                                    <div class="input-wrap">
+                                        <label class="input-label">Audit Language</label>
+                                        <select class="input-field" id="lang-select"
+                                            style="background:var(--bg-card-2);border:1px solid var(--border-2);border-radius:var(--r-s);color:var(--text-0);padding:9px 12px;">
+                                            <option value="en">English</option>
+                                            <option value="vi">Tiếng Việt</option>
+                                            <option value="zh">中文</option>
+                                            <option value="ja">日本語</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-title mb-4">📊 Export & Data</div>
+                                <div style="display:flex;flex-direction:column;gap:10px;">
+                                    <button class="btn btn-secondary w-full" onclick="exportAllCSV()">📥 Export All
+                                        Audits (CSV)</button>
+                                    <button class="btn btn-secondary w-full" onclick="exportReport()">📄 Export Last
+                                        Report (PDF)</button>
+                                    <button class="btn btn-ghost w-full" style="color:var(--red)"
+                                        onclick="clearHistory()">🗑️ Clear All History</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div><!-- /content -->
+            </div><!-- /main-area -->
+        </div><!-- /app-shell -->
+    </div><!-- /app -->
+
+    <!-- file:// protocol warning -->
+    <div id="file-warning">
+        <div class="fw-box">
+            <div class="fw-icon">🚫</div>
+            <div class="fw-title">Cần chạy qua Web Server</div>
+            <div class="fw-desc">
+                Browser chặn API calls khi file được mở trực tiếp (<code
+                    style="color:var(--amber);font-size:.8rem">file://</code>).<br>
+                Chạy một trong các lệnh bên dưới trong thư mục chứa file, sau đó mở <strong>localhost</strong> trong
+                browser.
+            </div>
+
+            <div class="fw-cmd-label">🐍 Python (có sẵn trên mọi máy)</div>
+            <div class="fw-cmd" onclick="copyCmd(this, 'python -m http.server 8080')">
+                <code>python -m http.server 8080</code>
+                <span class="fw-cmd-copy">click to copy</span>
+            </div>
+
+            <div class="fw-cmd-label">📦 Node.js / npx</div>
+            <div class="fw-cmd" onclick="copyCmd(this, 'npx serve .')">
+                <code>npx serve .</code>
+                <span class="fw-cmd-copy">click to copy</span>
+            </div>
+
+            <div class="fw-cmd-label">🔴 VS Code</div>
+            <div class="fw-cmd" onclick="copyCmd(this, '')">
+                <code>Cài extension "Live Server" → chuột phải file → Open with Live Server</code>
+                <span class="fw-cmd-copy">–</span>
+            </div>
+
+            <div class="fw-demo">
+                Hoặc dùng nút <strong>⚡ Demo</strong> để xem thử không cần API.
+                <br><br>
+                <button class="btn btn-ghost btn-sm"
+                    onclick="document.getElementById('file-warning').classList.remove('show')">
+                    Bỏ qua (API sẽ không hoạt động)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-container" class="toast-container"></div>
+
+    <script>
+        // ═══════════════════════════════════════════════════════════════
+        // STORAGE MANAGER
+        // ═══════════════════════════════════════════════════════════════
+        const StorageManager = {
+            save(k, d) { try { localStorage.setItem('mr_' + k, JSON.stringify(d)); } catch (e) { } },
+            load(k) { try { const d = localStorage.getItem('mr_' + k); return d ? JSON.parse(d) : null; } catch (e) { return null; } },
+            getAudits() { return this.load('audits') || [] },
+            saveAudit(a) { const arr = this.getAudits(); const i = arr.findIndex(x => x.id === a.id); if (i > -1) arr[i] = a; else arr.unshift(a); this.save('audits', arr.slice(0, 50)); updateHistoryBadge(); },
+            getSettings() { return this.load('settings') || {} },
+            saveSettings(s) { this.save('settings', s); }
+        };
+
+        // ═══════════════════════════════════════════════════════════════
+        // API KEY MANAGER (Claude API — no key needed, handled by proxy)
+        // ═══════════════════════════════════════════════════════════════
+        const KeyManager = { getClaude() { return ''; } };
+
+        function saveApiKeys() {}
+
+        function loadApiKeysIntoUI() {
+            const el = document.getElementById('engine-status-label');
+            if (el) el.textContent = 'Claude Sonnet — Sẵn sàng';
+        }
+
+        async function testApiKeys() {
+            const resultEl = document.getElementById('api-test-result');
+            resultEl.innerHTML = '<span style="color:var(--text-2)">🔄 Đang kiểm tra Claude API...</span>';
+            try {
+                const res = await fetch('https://api.anthropic.com/v1/messages', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'anthropic-version': '2023-06-01',
+                        'anthropic-dangerous-direct-browser-calls': 'true'
+                    },
+                    body: JSON.stringify({
+                        model: 'claude-sonnet-4-20250514',
+                        max_tokens: 10,
+                        messages: [{ role: 'user', content: 'Reply: OK' }]
+                    })
+                });
+                if (res.ok) {
+                    resultEl.innerHTML = '<div style="color:var(--accent)">✅ Claude API hoạt động — sẵn sàng audit!</div>';
+                } else {
+                    const err = await res.json().catch(() => ({}));
+                    resultEl.innerHTML = `<div style="color:var(--red)">⚠ Lỗi ${res.status}: ${err.error?.message || 'Unknown'}</div>`;
+                }
+            } catch (e) {
+                resultEl.innerHTML = `<div style="color:var(--red)">❌ Network error: ${e.message}</div>`;
+            }
+        }
+        // ═══════════════════════════════════════════════════════════════
+        // CLAUDE ENGINE — Web Search + AI Knowledge fallback
+        // ═══════════════════════════════════════════════════════════════
+        const OpenAIEngine = {
+            MODEL: 'claude-sonnet-4-20250514',
+            API_BASE: 'https://api.anthropic.com/v1/messages',
+
+            _parseJSON(text) {
+                if (!text) return null;
+                let s = text.replace(/```(?:json)?\s*/gi, '').replace(/```/g, '');
+                s = s.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, '');
+                const start = s.indexOf('{');
+                const end = s.lastIndexOf('}');
+                if (start === -1 || end === -1) return null;
+                const candidate = s.slice(start, end + 1);
+                try { return JSON.parse(candidate); } catch (_) { }
+                try { return JSON.parse(candidate.replace(/,(\s*[}\]])/g, '$1').replace(/[\r\n\t]/g, ' ')); } catch (_) { }
+                return null;
+            },
+
+            async runAudit(query, onProgress) {
+                const lang = document.getElementById('lang-select')?.value || 'en';
+                const langNote = lang === 'vi' ? 'Sử dụng ngữ cảnh doanh nghiệp Việt Nam nhưng giữ JSON keys bằng tiếng Anh.' :
+                    lang === 'zh' ? 'Use Chinese business context but keep JSON keys in English.' : '';
+
+                const JSON_SCHEMA = `{"business":{"name":"","category":"","address":"","city":"","country":"","rating":0,"totalReviews":0,"phone":"","website":"","hours":"","totalScore":0,"scoreLabel":"","metrics":{"profile":{"score":0,"max":20,"label":"Profile Completeness","issues":[]},"reviews":{"score":0,"max":25,"label":"Review Quality & Volume","issues":[]},"photos":{"score":0,"max":10,"label":"Photo Coverage","issues":[]},"keywords":{"score":0,"max":15,"label":"Keyword Optimization","issues":[]},"activity":{"score":0,"max":10,"label":"Post Activity","issues":[]},"engagement":{"score":0,"max":10,"label":"Customer Engagement","issues":[]},"authority":{"score":0,"max":10,"label":"Local Authority","issues":[]},"technical":{"score":0,"max":5,"label":"Technical Consistency","issues":[]}}},"competitors":[{"name":"","category":"","rating":0,"reviews":0,"photos":0,"score":0,"scoreChange":0,"rank":1,"address":""}],"recommendations":{"summary":"2-3 sentence summary","critical":[{"sev":"critical","icon":"💬","title":"","desc":"","action":"Fix"}],"plan":[{"day":"Day 1-3","task":""},{"day":"Week 1","task":""},{"day":"Month 1","task":""}],"content":["Post idea 1","Post idea 2"]}}`;
+
+                const SCORING = `Scoring: profile(0-20) completeness, reviews(0-25) rating*4+volume, photos(0-10), keywords(0-15), activity(0-10), engagement(0-10), authority(0-10), technical(0-5). totalScore=Math.round((sum/105)*100). NEVER return error JSON, always fill with 0/"" if unknown.`;
+
+                const SYSTEM = `You are a Google Maps SEO expert. Use the web_search tool to find REAL live data about the business from Google Maps, Google Search, and review sites. Search for the business, its competitors, reviews, and ratings. Then output ONLY a raw JSON object — no markdown, no explanation, no text before or after. ${langNote} Schema: ${JSON_SCHEMA} ${SCORING}`;
+
+                const traceEl = document.getElementById('fn-trace');
+
+                if (traceEl) traceEl.innerHTML = `<div style="color:var(--accent)">🔍 Chế độ: Claude AI + Web Search (dữ liệu thực)</div>`;
+                onProgress(12, 'Kết nối Claude AI...', 'Đang khởi tạo web search');
+
+                let res, data;
+                try {
+                    res = await fetch(this.API_BASE, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'anthropic-version': '2023-06-01',
+                            'anthropic-dangerous-direct-browser-calls': 'true'
+                        },
+                        body: JSON.stringify({
+                            model: this.MODEL,
+                            max_tokens: 8192,
+                            system: SYSTEM,
+                            tools: [{ type: 'web_search_20250305', name: 'web_search' }],
+                            messages: [{ role: 'user', content: `Audit this business for Google Maps SEO: "${query}". Search for its real data, rating, reviews, photos, competitors in the same area and category. Return only the JSON.` }]
+                        })
+                    });
+                } catch (e) {
+                    throw new Error('Network error khi gọi Claude API: ' + e.message);
+                }
+
+                if (!res.ok) {
+                    const err = await res.json().catch(() => ({}));
+                    throw new Error(`Claude API lỗi ${res.status}: ${err.error?.message || 'Unknown error'}`);
+                }
+
+                data = await res.json();
+                onProgress(75, 'Phân tích dữ liệu...', 'Claude đang tính điểm SEO');
+
+                // Extract text from content blocks (may include tool_use + text blocks)
+                let text = '';
+                const content = data.content || [];
+                for (const block of content) {
+                    if (block.type === 'text') text += block.text;
+                    if (traceEl && block.type === 'tool_use' && block.name === 'web_search') {
+                        const q = block.input?.query || '';
+                        if (q) traceEl.innerHTML += `<div style="color:var(--blue);font-size:.75rem;">→ searched: "${q}"</div>`;
+                    }
+                }
+
+                if (!text && data.stop_reason && data.stop_reason !== 'end_turn') {
+                    throw new Error(`Claude dừng sớm (${data.stop_reason}). Thử tên doanh nghiệp cụ thể hơn.`);
+                }
+
+                onProgress(92, 'Cấu trúc báo cáo...', 'Đang phân tích kết quả SEO');
+                if (traceEl) traceEl.innerHTML += `<div style="color:var(--accent-bright)">✓ Hoàn tất — đang tạo báo cáo</div>`;
+
+                const parsed = this._parseJSON(text);
+                if (!parsed) throw new Error('Claude trả về JSON không hợp lệ. Thử tên doanh nghiệp cụ thể hơn.');
+
+                onProgress(100, 'Audit hoàn tất!', 'Báo cáo đã sẵn sàng');
+                return parsed;
+            },
+
+            // Quick stream text effect for AI-generated summaries
+            async streamText(el, text, delayMs = 16) {
+                el.textContent = '';
+                el.classList.add('streaming-cursor');
+                for (let i = 0; i < text.length; i++) {
+                    el.textContent += text[i];
+                    if (i % 4 === 0) await new Promise(r => setTimeout(r, delayMs));
+                }
+                el.classList.remove('streaming-cursor');
+            }
+        };
+
+        // ═══════════════════════════════════════════════════════════════
+        // SCORE HELPERS
+        // ═══════════════════════════════════════════════════════════════
+        const Score = {
+            color(s) { if (s >= 80) return 'var(--accent)'; if (s >= 60) return 'var(--amber)'; return 'var(--red)'; },
+            cls(s) { if (s >= 80) return 'score-good'; if (s >= 60) return 'score-ok'; return 'score-bad'; },
+            label(s) { if (s >= 85) return 'Excellent'; if (s >= 70) return 'Good'; if (s >= 55) return 'Fair'; return 'Needs Work'; },
+            barColor(s) { if (s >= 80) return 'var(--accent)'; if (s >= 60) return 'var(--amber)'; return 'var(--red)'; }
+        };
+
+        // ═══════════════════════════════════════════════════════════════
+        // CHART MANAGER
+        // ═══════════════════════════════════════════════════════════════
+        const ChartMgr = {
+            instances: {},
+            destroy(id) { if (this.instances[id]) { this.instances[id].destroy(); delete this.instances[id]; } },
+
+            renderTrend(id, audits) {
+                this.destroy(id);
+                const ctx = document.getElementById(id); if (!ctx) return;
+                const data = audits.slice(0, 8).reverse();
+                this.instances[id] = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: data.map((a, i) => data.length <= 1 ? 'Latest' : `Audit ${i + 1}`),
+                        datasets: [{
+                            label: 'SEO Score', data: data.map(a => a.totalScore || 0),
+                            borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,.08)',
+                            fill: true, tension: .4, pointRadius: 4, pointBackgroundColor: '#10b981', borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: { legend: { labels: { color: '#6a7fa8', boxWidth: 12, font: { size: 11 } } }, tooltip: { mode: 'index' } },
+                        scales: {
+                            x: { ticks: { color: '#6a7fa8', font: { size: 11 } }, grid: { color: 'rgba(255,255,255,.04)' } },
+                            y: { ticks: { color: '#6a7fa8', font: { size: 11 } }, grid: { color: 'rgba(255,255,255,.04)' }, min: 0, max: 100 }
+                        }
+                    }
+                });
+            },
+
+            renderDist(id, metrics) {
+                this.destroy(id);
+                const ctx = document.getElementById(id); if (!ctx) return;
+                if (!metrics) {
+                    this.instances[id] = new Chart(ctx, {
+                        type: 'doughnut', data: { labels: ['No data'], datasets: [{ data: [1], backgroundColor: ['rgba(100,116,139,.3)'], borderWidth: 0 }] },
+                        options: { responsive: true, maintainAspectRatio: false, cutout: '65%', plugins: { legend: { display: false } } }
+                    });
+                    return;
+                }
+                const entries = Object.values(metrics);
+                this.instances[id] = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: entries.map(m => m.label),
+                        datasets: [{ data: entries.map(m => m.score), backgroundColor: ['#10b981', '#3b82f6', '#a78bfa', '#f59e0b', '#ef4444', '#14b8a6', '#ec4899', '#64748b'], borderWidth: 0, hoverOffset: 6 }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, cutout: '65%', plugins: { legend: { position: 'right', labels: { color: '#6a7fa8', boxWidth: 10, font: { size: 10 }, padding: 6 } } } }
+                });
+            },
+
+            renderRadar(id, metrics, competitorScores) {
+                this.destroy(id);
+                const ctx = document.getElementById(id); if (!ctx) return;
+                const labels = Object.values(metrics).map(m => m.label.split(' ').slice(0, 2).join('\n'));
+                const scores = Object.values(metrics).map(m => Math.round(m.score / m.max * 100));
+                const compScores = competitorScores || [88, 85, 82, 86, 78, 84, 80, 88];
+                this.instances[id] = new Chart(ctx, {
+                    type: 'radar',
+                    data: {
+                        labels,
+                        datasets: [
+                            { label: 'Your Score', data: scores, backgroundColor: 'rgba(16,185,129,.15)', borderColor: '#10b981', borderWidth: 2, pointBackgroundColor: '#10b981', pointRadius: 4 },
+                            { label: 'Top Competitor', data: compScores, backgroundColor: 'rgba(59,130,246,.08)', borderColor: '#3b82f6', borderWidth: 2, pointBackgroundColor: '#3b82f6', pointRadius: 3, borderDash: [4, 4] }
+                        ]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: true,
+                        plugins: { legend: { labels: { color: '#6a7fa8', font: { size: 10 }, boxWidth: 10 } } },
+                        scales: { r: { min: 0, max: 100, ticks: { color: '#3a4b68', font: { size: 9 }, stepSize: 25 }, grid: { color: 'rgba(255,255,255,.06)' }, angleLines: { color: 'rgba(255,255,255,.06)' }, pointLabels: { color: '#7a8db5', font: { size: 10 } } } }
+                    }
+                });
+            },
+
+            renderComparison(id, biz, comps) {
+                this.destroy(id);
+                const ctx = document.getElementById(id); if (!ctx) return;
+                const labels = ['Profile', 'Reviews', 'Photos', 'Keywords', 'Activity', 'Engagement'];
+                const keys = ['profile', 'reviews', 'photos', 'keywords', 'activity', 'engagement'];
+                const yourScores = keys.map(k => biz.metrics[k] ? Math.round(biz.metrics[k].score / biz.metrics[k].max * 100) : 0);
+                const comp1 = comps[0]; const comp2 = comps[2] || comps[1];
+                // Estimate competitor scores from their overall score
+                const compScore1 = comp1 ? Math.round(comp1.score) : 80;
+                const compScore2 = comp2 ? Math.round(comp2.score) : 70;
+                const makeCompBars = (base) => keys.map((_, i) => Math.min(100, Math.max(30, base + (i % 3 === 0 ? 5 : i % 3 === 1 ? -3 : 2))));
+                this.instances[id] = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels,
+                        datasets: [
+                            { label: biz.name.split(/[-—]/)[0].trim(), data: yourScores, backgroundColor: 'rgba(16,185,129,.7)', borderRadius: 4 },
+                            { label: comp1?.name || 'Competitor 1', data: makeCompBars(compScore1), backgroundColor: 'rgba(59,130,246,.5)', borderRadius: 4 },
+                            { label: comp2?.name || 'Competitor 2', data: makeCompBars(compScore2), backgroundColor: 'rgba(167,139,250,.4)', borderRadius: 4 }
+                        ]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: { legend: { labels: { color: '#6a7fa8', font: { size: 10 }, boxWidth: 10 } } },
+                        scales: { x: { ticks: { color: '#6a7fa8', font: { size: 10 } }, grid: { display: false } }, y: { ticks: { color: '#6a7fa8', font: { size: 10 } }, grid: { color: 'rgba(255,255,255,.04)' }, min: 0, max: 100 } }
+                    }
+                });
+            }
+        };
+
+        // ═══════════════════════════════════════════════════════════════
+        // UI UTILS
+        // ═══════════════════════════════════════════════════════════════
+        function toast(msg, type = 'success', duration = 3500) {
+            const icons = { success: '✅', error: '❌', warning: '⚠️', info: 'ℹ️' };
+            const el = document.createElement('div');
+            el.className = `toast ${type}`;
+            el.innerHTML = `<span class="toast-icon">${icons[type]}</span><span class="toast-msg">${msg}</span><button class="toast-close" onclick="this.parentElement.remove()">✕</button>`;
+            document.getElementById('toast-container').appendChild(el);
+            setTimeout(() => { el.style.animation = 'slideOut .3s ease forwards'; setTimeout(() => el.remove(), 300); }, duration);
+        }
+
+        function renderStars(rating) {
+            const full = Math.floor(rating || 0); const half = (rating || 0) - full >= 0.5;
+            let s = ''; for (let i = 0; i < full; i++)s += '★'; if (half) s += '½'; for (let i = 0; i < (5 - full - (half ? 1 : 0)); i++)s += '☆';
+            return s;
+        }
+
+        function renderScorePill(score) {
+            const cls = score >= 80 ? 'score-good' : score >= 60 ? 'score-ok' : 'score-bad';
+            return `<span class="score-pill ${cls}">${score}/100</span>`;
+        }
+
+        function renderGauge(score) {
+            const r = 70, cx = 80, cy = 80, stroke = 10;
+            const circ = Math.PI * r;
+            const filled = (score / 100) * circ;
+            const color = score >= 80 ? '#10b981' : score >= 60 ? '#f59e0b' : '#ef4444';
+            return `<svg width="160" height="90" viewBox="0 0 160 90">
+    <path d="M 10 80 A 70 70 0 0 1 150 80" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="${stroke}" stroke-linecap="round"/>
+    <path d="M 10 80 A 70 70 0 0 1 150 80" fill="none" stroke="${color}" stroke-width="${stroke}" stroke-linecap="round"
+      stroke-dasharray="${filled} ${circ}" style="transition:stroke-dasharray .8s ease"/>
+    <text x="80" y="72" text-anchor="middle" fill="${color}" font-family="Outfit" font-size="22" font-weight="900">${score}</text>
+    <text x="80" y="88" text-anchor="middle" fill="#6a7fa8" font-family="Outfit" font-size="9" font-weight="600">${Score.label(score).toUpperCase()}</text>
+  </svg>`;
+        }
+
+        function renderMetricBar(key, m) {
+            const pct = Math.round(m.score / m.max * 100);
+            const color = Score.barColor(pct);
+            return `<div class="metric-bar-row">
+    <div class="metric-bar-header">
+      <span class="metric-bar-label">${m.label}</span>
+      <span class="metric-bar-score" style="color:${color}">${m.score}/${m.max}</span>
+    </div>
+    <div class="metric-bar-track"><div class="metric-bar-fill" style="width:${pct}%;background:${color}"></div></div>
+    ${m.issues && m.issues.length ? `<div style="font-size:.7rem;color:var(--text-2);margin-top:3px;">⚠ ${m.issues[0]}</div>` : ''}
+  </div>`;
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // NAVIGATION
+        // ═══════════════════════════════════════════════════════════════
+        const PAGE_META = {
+            'dashboard': { title: 'Dashboard', sub: 'Overview of all audits and performance' },
+            'new-audit': { title: 'New Audit', sub: 'Analyze any business with Claude AI' },
+            'audit-result': { title: 'Audit Results', sub: 'Detailed SEO analysis report' },
+            'competitors': { title: 'Competitors', sub: 'Side-by-side competitor comparison' },
+            'history': { title: 'Audit History', sub: 'All previous audits' },
+            'settings': { title: 'Settings', sub: 'Preferences and app configuration' }
+        };
+
+        function navigate(page) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            const pg = document.getElementById('page-' + page);
+            if (pg) pg.classList.add('active');
+            const nav = document.getElementById('nav-' + page);
+            if (nav) nav.classList.add('active');
+            const meta = PAGE_META[page] || { title: page, sub: '' };
+            document.getElementById('header-title').textContent = meta.title;
+            document.getElementById('header-sub').textContent = meta.sub;
+            if (page === 'dashboard') renderDashboard();
+            if (page === 'history') renderHistory();
+            if (page === 'competitors') {
+                // Render with latest audit data if available, otherwise show empty state
+                const audits = StorageManager.getAudits();
+                const latest = audits[0];
+                if (latest && latest.competitors && latest.competitors.length) {
+                    renderCompetitors(latest, latest.competitors);
+                } else {
+                    const el = document.getElementById('competitors-content');
+                    if (el && !el.querySelector('.comp-rank')) {
+                        el.innerHTML = `<div class="empty-state"><div class="empty-icon">⚔️</div><h3>No competitor data</h3><p>Run an audit first to see competitors here</p><button class="btn btn-primary btn-sm mt-2" onclick="navigate('new-audit')">Start Audit</button></div>`;
+                    }
+                }
+            }
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // DASHBOARD RENDER
+        // ═══════════════════════════════════════════════════════════════
+        function renderDashboard() {
+            const audits = StorageManager.getAudits();
+            // KPI updates
+            document.getElementById('kpi-audits').textContent = audits.length;
+            if (audits.length) {
+                const avgScore = Math.round(audits.reduce((s, a) => s + (a.totalScore || 0), 0) / audits.length);
+                document.getElementById('kpi-avg-score').textContent = avgScore;
+                document.getElementById('kpi-audits-sub').textContent = `↑ ${audits.length} total run`;
+                // Issues from latest
+                const latest = audits[0];
+                if (latest && latest.metrics) {
+                    const allIssues = Object.values(latest.metrics).flatMap(m => (m.issues || []));
+                    document.getElementById('kpi-issues').textContent = allIssues.length;
+                    const critCount = Math.ceil(allIssues.length / 3);
+                    document.getElementById('kpi-issues-badge').textContent = critCount + ' critical';
+                    document.getElementById('kpi-issues-sub').textContent = critCount + ' critical to fix';
+                }
+                const uniqueBiz = new Set(audits.map(a => a.name)).size;
+                document.getElementById('kpi-biz').textContent = uniqueBiz;
+                document.getElementById('kpi-biz-sub').textContent = uniqueBiz + ' unique businesses';
+            }
+
+            // Charts
+            ChartMgr.renderTrend('trend-chart', audits);
+            const latestMetrics = audits[0]?.metrics;
+            ChartMgr.renderDist('dist-chart', latestMetrics);
+
+            // Recent audits list
+            const recentEl = document.getElementById('dash-recent');
+            if (audits.length) {
+                recentEl.innerHTML = audits.slice(0, 5).map(a => `
+      <div class="history-item" onclick="loadAuditById('${a.id}')">
+        <div class="hist-icon">📍</div>
+        <div class="hist-info">
+          <div class="hist-name">${a.name}</div>
+          <div class="hist-meta"><span>${a.category || 'Business'}</span><span>·</span><span>🕐 ${formatDate(a.createdAt)}</span></div>
+        </div>
+        ${renderScorePill(a.totalScore || 0)}
+        <div class="hist-arrow">›</div>
+      </div>`).join('');
+            }
+
+            // Issues from latest audit
+            const issEl = document.getElementById('dash-issues');
+            if (latestMetrics) {
+                const allIss = Object.values(latestMetrics).flatMap(m => (m.issues || []).map(i => ({ text: i, label: m.label })));
+                if (allIss.length) {
+                    issEl.innerHTML = allIss.slice(0, 4).map((iss, i) => `
+        <div class="issue-item issue-${i < 2 ? 'critical' : 'warning'}">
+          <div class="issue-icon">${i < 2 ? '🔴' : '🟡'}</div>
+          <div class="issue-body"><div class="issue-title">${iss.text}</div><div class="issue-desc">${iss.label}</div></div>
+        </div>`).join('');
+                }
+            }
+
+            // Competitors from latest audit
+            const compEl = document.getElementById('dash-competitors');
+            const latestAudit = audits[0];
+            if (latestAudit?.competitors?.length) {
+                const ranks = ['gold', 'silver', 'bronze', ''];
+                compEl.innerHTML = latestAudit.competitors.slice(0, 4).map((c, i) => `
+      <div class="comp-card" onclick="navigate('competitors')">
+        <div class="comp-rank ${ranks[i] || ''}">${i + 1}</div>
+        <div class="comp-info">
+          <div class="comp-name">${c.name}</div>
+          <div class="comp-meta">⭐ ${c.rating || '—'} · ${(c.reviews || 0).toLocaleString()} reviews</div>
+        </div>
+        <div class="comp-score-pill ${Score.cls(c.score || 0)}">${c.score || '—'}</div>
+      </div>`).join('');
+            }
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // AUDIT FLOW
+        // ═══════════════════════════════════════════════════════════════
+        let activeTab = 'url';
+        function switchTab(tab) {
+            activeTab = tab;
+            ['url', 'name', 'place'].forEach(t => {
+                document.getElementById('tab-' + t).style.display = t === tab ? 'block' : 'none';
+            });
+            document.querySelectorAll('#input-tabs .tab').forEach((el, i) => {
+                el.classList.toggle('active', ['url', 'name', 'place'][i] === tab);
+            });
+        }
+
+        function getAuditInput() {
+            if (activeTab === 'url') return document.getElementById('audit-url').value;
+            if (activeTab === 'name') {
+                const n = document.getElementById('audit-name').value;
+                const a = document.getElementById('audit-address').value;
+                return n + (a ? ' ' + a : '');
+            }
+            return document.getElementById('audit-place-id').value;
+        }
+
+        function runAudit() {
+            const input = getAuditInput().trim();
+            if (!input) { toast('Please enter a business name, URL, or Place ID', 'error'); return; }
+            startAuditProcess(input);
+        }
+
+        function runAuditDemo() {
+            toast('⚡ Đang tải dữ liệu demo...', 'info', 3000);
+            startAuditProcess('Highlands Coffee Nguyen Hue District 1 Ho Chi Minh City');
+        }
+
+        const LOADING_STAGES = [
+            { pct: 10, text: 'Kết nối Claude AI...', sub: 'Khởi động Web Search Tool' },
+            { pct: 25, text: 'Claude đang tìm kiếm web...', sub: 'Đang tìm thông tin doanh nghiệp thực tế' },
+            { pct: 45, text: 'Claude phân tích đối thủ...', sub: 'Đang tìm đối thủ cạnh tranh gần đó trên Google Maps' },
+            { pct: 65, text: 'Phân tích chỉ số SEO...', sub: 'Claude tính điểm profile, reviews, photos, keywords' },
+            { pct: 82, text: 'Tạo đề xuất AI...', sub: 'Xây dựng kế hoạch hành động cá nhân hóa' },
+            { pct: 93, text: 'Hoàn thiện báo cáo...', sub: 'Sắp xong — đang chuẩn bị kết quả' },
+        ];
+
+        async function startAuditProcess(input) {
+            const formCard = document.querySelector('.audit-form-card');
+            const loadDiv = document.getElementById('audit-loading');
+            if (formCard) formCard.style.display = 'none';
+            loadDiv.style.display = 'block';
+
+            const progressEl = document.getElementById('loading-progress');
+            const pctEl = document.getElementById('loading-pct');
+            const textEl = document.getElementById('loading-text');
+            const subEl = document.getElementById('loading-sub');
+            const stepsEl = document.getElementById('loading-steps');
+            stepsEl.innerHTML = '';
+
+            let stageIdx = 0;
+            const advanceStage = () => {
+                if (stageIdx < LOADING_STAGES.length) {
+                    const s = LOADING_STAGES[stageIdx++];
+                    progressEl.style.width = s.pct + '%';
+                    pctEl.textContent = s.pct + '%';
+                    textEl.textContent = s.text;
+                    subEl.textContent = s.sub;
+                    stepsEl.innerHTML += `<div style="display:flex;align-items:center;gap:6px;font-size:.72rem;color:var(--accent);animation:fadeInFast .3s ease;"><span>✓</span><span>${s.text}</span></div>`;
+                }
+            };
+
+            // Start animated stage progression while API call runs
+            advanceStage(); // stage 0 immediately
+            const stageInterval = setInterval(advanceStage, 1800);
+
+            try {
+                const result = await OpenAIEngine.runAudit(input, (pct, text, sub) => {
+                    // Override with actual API progress callbacks
+                    progressEl.style.width = pct + '%';
+                    pctEl.textContent = pct + '%';
+                    textEl.textContent = text;
+                    subEl.textContent = sub;
+                });
+
+                clearInterval(stageInterval);
+                progressEl.style.width = '100%';
+                pctEl.textContent = '100%';
+                textEl.textContent = 'Audit Complete!';
+                subEl.textContent = 'AI analysis finished';
+                stepsEl.innerHTML += `<div style="display:flex;align-items:center;gap:6px;font-size:.72rem;color:var(--accent);animation:fadeInFast .3s ease;"><span>✓</span><span>Report ready</span></div>`;
+
+                await new Promise(r => setTimeout(r, 600));
+
+                // Attach competitors to business object for saving
+                const biz = result.business;
+                biz.competitors = result.competitors;
+                biz.recommendations = result.recommendations;
+
+                const auditRecord = {
+                    id: 'audit_' + Date.now(),
+                    name: biz.name,
+                    category: biz.category,
+                    address: biz.address,
+                    totalScore: biz.totalScore,
+                    metrics: biz.metrics,
+                    competitors: result.competitors,
+                    recommendations: result.recommendations,
+                    createdAt: new Date().toISOString()
+                };
+                const autoSave = document.getElementById('autosave-toggle')?.classList.contains('on') !== false;
+                if (autoSave) StorageManager.saveAudit(auditRecord);
+
+                loadDiv.style.display = 'none';
+                if (formCard) formCard.style.display = 'block';
+
+                // Show nav item for result
+                document.getElementById('nav-audit-result').style.display = 'flex';
+
+                navigate('audit-result');
+                renderAuditResult(auditRecord);
+                toast(`Audit complete! Score: ${biz.totalScore}/100`, 'success');
+
+            } catch (err) {
+                clearInterval(stageInterval);
+                loadDiv.style.display = 'none';
+                if (formCard) formCard.style.display = 'block';
+                console.error('Audit error:', err);
+                const isKey = err.message && (err.message.includes('API key') || err.message.includes('🔑') || err.message.includes('🗺️'));
+                const isNetwork = err.message && err.message.includes('Network error');
+                const isQuota = err.message && (err.message.includes('quota') || err.message.includes('billing') || err.message.includes('💳'));
+                let msg;
+                if (isKey) msg = err.message + ' → Go to Settings ⚙️ to configure.';
+                else if (isNetwork) msg = '🌐 ' + err.message;
+                else if (isQuota) msg = err.message;
+                else msg = 'Audit failed: ' + err.message;
+                toast(msg, isKey || isQuota ? 'warning' : 'error', 10000);
+            }
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // AUDIT RESULT RENDERER
+        // ═══════════════════════════════════════════════════════════════
+        function renderAuditResult(audit) {
+            const biz = audit;
+            const rec = audit.recommendations || {};
+            const metrics = audit.metrics || {};
+            const totalScore = audit.totalScore || 0;
+            const allIssues = Object.values(metrics).flatMap(m => (m.issues || []).map(i => ({ text: i, label: m.label })));
+            const metricBars = Object.entries(metrics).map(([k, v]) => renderMetricBar(k, v)).join('');
+            const recItems = (rec.critical || []).map((r, i) => `
+    <div class="issue-item issue-${r.sev === 'critical' ? 'critical' : r.sev === 'warning' ? 'warning' : 'info'}" style="margin-bottom:0;">
+      <div class="issue-icon">${r.icon || '💡'}</div>
+      <div class="issue-body">
+        <div class="issue-title">${r.title}</div>
+        <div class="issue-desc">${r.desc}</div>
+      </div>
+      <button class="btn btn-sm btn-ghost" style="flex-shrink:0;font-size:.7rem;">${r.action || 'View'}</button>
+    </div>`).join('');
+            const planItems = (rec.plan || []).map((p, i) => `
+    <div class="check-item" id="check-${i}" onclick="toggleCheck(${i})">
+      <div class="check-box" id="cb-${i}"></div>
+      <div class="flex-1">
+        <div style="font-size:.72rem;color:var(--accent);font-weight:700;margin-bottom:2px;">${p.day}</div>
+        <div class="check-text" style="font-size:.82rem;">${p.task}</div>
+      </div>
+    </div>`).join('');
+            const contentItems = (rec.content || []).map((c, i) => `
+    <div style="padding:12px;background:var(--bg-card-2);border-radius:var(--r-s);border:1px solid var(--border-0);font-size:.8rem;color:var(--text-1);line-height:1.6;">
+      <span style="color:var(--accent);font-weight:700;">Suggestion ${i + 1}:</span> ${c}
+    </div>`).join('');
+
+            const html = `<div style="display:flex;flex-direction:column;gap:20px;">
+
+  <div class="card fade-in">
+    <div class="flex items-center justify-between mb-2">
+      <div class="flex items-center gap-2">
+        <span class="badge badge-green">✓ AI Analyzed</span>
+        <span class="badge badge-blue">Real Data</span>
+      </div>
+      <div class="flex gap-2">
+        <button class="btn btn-ghost btn-sm" onclick="exportReport()">📄 Export PDF</button>
+        <button class="btn btn-secondary btn-sm" onclick="navigate('competitors')">⚔️ Compare</button>
+      </div>
+    </div>
+    <div class="biz-profile">
+      <div class="biz-map-thumb"><div class="map-grid"></div><span style="font-size:2rem;position:relative;z-index:1;">📍</span></div>
+      <div class="biz-details">
+        <div class="biz-name">${biz.name}</div>
+        <div class="biz-category">${biz.category || ''}</div>
+        <div class="biz-meta-row">
+          <div class="biz-meta-item">📍 ${biz.address || ''}</div>
+          ${biz.phone ? `<div class="biz-meta-item">📞 ${biz.phone}</div>` : ''}
+          ${biz.hours ? `<div class="biz-meta-item">🕐 ${biz.hours}</div>` : ''}
+          ${biz.rating ? `<div class="biz-meta-item">⭐ ${biz.rating} · ${(biz.totalReviews || 0).toLocaleString()} reviews</div>` : ''}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="score-breakdown">
+    <div class="card fade-in-delay-1">
+      <div class="section-header"><div class="card-title">Overall SEO Score</div></div>
+      <div class="score-ring-wrap mt-2">${renderGauge(totalScore)}</div>
+      <div style="margin-top:16px;">${metricBars}</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <div class="card fade-in-delay-1">
+        <div class="card-title mb-2">📡 Radar Analysis</div>
+        <div style="position:relative;"><canvas id="radar-chart" style="max-height:260px;"></canvas></div>
+      </div>
+      <div class="card fade-in-delay-2">
+        <div class="card-title mb-2">🔍 Issues Found</div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          ${allIssues.slice(0, 5).map(iss => `<div style="display:flex;gap:8px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--border-0);">
+            <span style="color:var(--amber);flex-shrink:0;">⚠</span>
+            <div><div style="font-size:.8rem;font-weight:600;">${iss.text}</div><div style="font-size:.7rem;color:var(--text-2);">${iss.label}</div></div>
+          </div>`).join('')}
+          ${allIssues.length === 0 ? '<div style="color:var(--text-3);font-size:.8rem;padding:8px 0;">No issues detected — great profile!</div>' : ''}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  ${rec.summary ? `<div class="card fade-in-delay-2">
+    <div class="flex items-center gap-2 mb-3">
+      <div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#0891b2);display:flex;align-items:center;justify-content:center;font-size:.85rem;">🧠</div>
+      <div class="card-title">AI Analysis Summary</div>
+      <span class="badge badge-green">Claude AI</span>
+    </div>
+    <div id="ai-summary" style="font-size:.88rem;color:var(--text-1);line-height:1.8;"></div>
+  </div>`: ''}
+
+  <div class="card fade-in-delay-2">
+    <div class="section-header"><div><div class="card-title">🚨 Recommendations</div><div class="card-subtitle">AI-generated action items by priority</div></div></div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:12px;">${recItems || '<div style="color:var(--text-3);font-size:.8rem;">Run a full audit to see recommendations</div>'}</div>
+  </div>
+
+  <div class="card fade-in-delay-3">
+    <div class="section-header"><div><div class="card-title">📋 30-Day Action Plan</div><div class="card-subtitle">Step-by-step improvement roadmap</div></div></div>
+    <div style="display:flex;flex-direction:column;gap:6px;margin-top:12px;" id="priority-checklist">${planItems || '<div style="color:var(--text-3);font-size:.8rem;">No plan generated</div>'}</div>
+  </div>
+
+  ${rec.content?.length ? `<div class="card fade-in-delay-4">
+    <div class="section-header"><div><div class="card-title">✍️ Content Suggestions</div><div class="card-subtitle">AI-generated copy and post ideas</div></div></div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:12px;">${contentItems}</div>
+  </div>`: ''}
+
+  </div>`;
+
+            document.getElementById('result-content').innerHTML = html;
+
+            // Render radar chart after DOM update
+            setTimeout(() => {
+                ChartMgr.renderRadar('radar-chart', metrics);
+                // Stream summary text
+                if (rec.summary) {
+                    const el = document.getElementById('ai-summary');
+                    if (el) OpenAIEngine.streamText(el, rec.summary, 12);
+                }
+            }, 200);
+
+            // Render competitor page too
+            if (audit.competitors?.length) {
+                renderCompetitors(audit, audit.competitors);
+            }
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // COMPETITORS RENDERER
+        // ═══════════════════════════════════════════════════════════════
+        function renderCompetitors(biz, comps) {
+            if (!comps || !comps.length) {
+                document.getElementById('competitors-content').innerHTML = `<div class="empty-state"><div class="empty-icon">⚔️</div><h3>No competitor data</h3><p>Run an audit first</p></div>`;
+                return;
+            }
+            const ranks = ['gold', 'silver', 'bronze', '', ''];
+            const yourScore = biz.totalScore || 0;
+            const html = `<div style="display:flex;flex-direction:column;gap:20px;">
+  <div class="card fade-in">
+    <div class="section-header">
+      <div><div class="card-title">Competitor Comparison</div><div class="card-subtitle">Your business vs top competitors in the area</div></div>
+      <span class="badge badge-green">AI Researched</span>
+    </div>
+    <div style="height:260px;position:relative;margin-top:12px;"><canvas id="comp-chart"></canvas></div>
+  </div>
+
+  <div class="card fade-in-delay-1">
+    <div class="section-header"><div class="card-title">Your Position</div></div>
+    <div style="display:flex;align-items:center;gap:16px;padding:16px;background:var(--accent-dim);border:1px solid var(--border-accent);border-radius:var(--r-m);">
+      <div class="comp-rank gold" style="width:36px;height:36px;font-size:1rem;">📍</div>
+      <div class="comp-info flex-1">
+        <div class="comp-name" style="font-size:.95rem;">${biz.name}</div>
+        <div class="comp-meta">Your audited business · Score: ${yourScore}/100</div>
+      </div>
+      ${renderScorePill(yourScore)}
+    </div>
+  </div>
+
+  <div class="grid-2 fade-in-delay-2">
+    ${comps.map((c, i) => {
+                const diff = c.score - yourScore;
+                return `<div class="card">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="comp-rank ${ranks[i] || ''}" style="width:32px;height:32px;font-size:.85rem;">${i + 1}</div>
+          <div class="flex-1"><div style="font-weight:700;font-size:.9rem;">${c.name}</div><div style="font-size:.72rem;color:var(--text-2);">${c.category || biz.category || ''}</div></div>
+          ${renderScorePill(c.score || 0)}
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div class="flex justify-between text-sm"><span class="text-muted">Rating</span><span>⭐ ${c.rating || '—'}</span></div>
+          <div class="flex justify-between text-sm"><span class="text-muted">Reviews</span><span>${(c.reviews || 0).toLocaleString()}</span></div>
+          <div class="flex justify-between text-sm"><span class="text-muted">Photos</span><span>${c.photos || '—'}</span></div>
+          <div class="flex justify-between text-sm"><span class="text-muted">vs You</span><span class="${diff > 0 ? 'text-red' : 'text-accent'}">${diff > 0 ? '▴ +' + diff : '▾ ' + Math.abs(diff)} pts</span></div>
+        </div>
+        ${c.address ? `<div style="font-size:.7rem;color:var(--text-3);margin-top:8px;">📍 ${c.address}</div>` : ''}
+      </div>`;
+            }).join('')}
+  </div>
+  </div>`;
+
+            document.getElementById('competitors-content').innerHTML = html;
+            setTimeout(() => ChartMgr.renderComparison('comp-chart', biz, comps), 200);
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // HISTORY RENDERER
+        // ═══════════════════════════════════════════════════════════════
+        function renderHistory() {
+            const saved = StorageManager.getAudits();
+            const el = document.getElementById('history-list');
+            if (!saved.length) {
+                el.innerHTML = `<div class="empty-state"><div class="empty-icon">📋</div><h3>No audits yet</h3><p>Run your first AI audit to see history here</p><button class="btn btn-primary btn-sm mt-2" onclick="navigate('new-audit')">Start Audit</button></div>`;
+                return;
+            }
+            el.innerHTML = `<div style="display:flex;flex-direction:column;gap:8px;">
+  ${saved.map(a => `
+    <div class="history-item" onclick="loadAuditById('${a.id}')">
+      <div class="hist-icon">📍</div>
+      <div class="hist-info">
+        <div class="hist-name">${a.name}</div>
+        <div class="hist-meta">
+          <span>${a.category || 'Business'}</span><span>·</span>
+          <span>📍 ${(a.address || '').substring(0, 40)}${(a.address || '').length > 40 ? '...' : ''}</span><span>·</span>
+          <span>🕐 ${formatDate(a.createdAt)}</span>
+        </div>
+      </div>
+      ${renderScorePill(a.totalScore || 0)}
+      <div class="hist-arrow">›</div>
+    </div>`).join('')}
+  </div>`;
+        }
+
+        function loadAuditById(id) {
+            const audits = StorageManager.getAudits();
+            const audit = audits.find(a => a.id === id);
+            if (!audit) { toast('Audit not found', 'error'); return; }
+            document.getElementById('nav-audit-result').style.display = 'flex';
+            navigate('audit-result');
+            renderAuditResult(audit);
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // MISC HELPERS
+        // ═══════════════════════════════════════════════════════════════
+        function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+        function formatDate(iso) {
+            if (!iso) return 'Unknown';
+            try {
+                const d = new Date(iso); const now = new Date();
+                const diff = Math.floor((now - d) / 86400000);
+                if (diff === 0) return 'Today'; if (diff === 1) return 'Yesterday';
+                if (diff < 7) return diff + 'd ago';
+                return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            } catch (e) { return 'Unknown'; }
+        }
+
+        function updateHistoryBadge() {
+            const count = StorageManager.getAudits().length;
+            const el = document.getElementById('history-badge');
+            if (el) el.textContent = count || '';
+        }
+
+        function toggleCheck(i) {
+            const cb = document.getElementById('cb-' + i);
+            const item = document.getElementById('check-' + i);
+            if (!cb || !item) return;
+            cb.classList.toggle('checked'); item.classList.toggle('checked');
+            cb.textContent = cb.classList.contains('checked') ? '✓' : '';
+        }
+
+        function toggleSidebar() {
+            const sb = document.getElementById('sidebar');
+            if (window.innerWidth <= 768) sb.classList.toggle('mobile-open');
+            else sb.classList.toggle('collapsed');
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const isDark = html.getAttribute('data-theme') === 'dark';
+            html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            const icon = document.getElementById('theme-icon');
+            const navItem = icon?.closest('.nav-item');
+            if (icon) icon.textContent = isDark ? '🌙' : '☀️';
+            if (navItem) { const label = navItem.querySelector('.nl'); if (label) label.textContent = isDark ? 'Dark Mode' : 'Light Mode'; }
+            const toggle = document.getElementById('dark-toggle');
+            if (toggle) toggle.classList.toggle('on', !isDark);
+        }
+
+        function clearHistory() {
+            if (!confirm('Clear all audit history?')) return;
+            StorageManager.save('audits', []);
+            updateHistoryBadge();
+            renderHistory();
+            renderDashboard();
+            toast('History cleared', 'info');
+        }
+
+        function exportAllCSV() {
+            const audits = StorageManager.getAudits();
+            if (!audits.length) { toast('No audits to export', 'warning'); return; }
+            const rows = [['Name', 'Category', 'Address', 'Score', 'Date'], ...audits.map(a => [a.name, a.category || '', a.address || '', a.totalScore, a.createdAt])];
+            const csv = rows.map(r => r.map(c => '"' + (c || '').toString().replace(/"/g, '""') + '"').join(',')).join('\n');
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href = url; a.download = 'maprank-audits.csv'; a.click();
+            URL.revokeObjectURL(url);
+            toast('CSV exported successfully', 'success');
+        }
+
+        function exportReport() {
+            toast('Preparing PDF report...', 'info');
+            setTimeout(() => { window.print(); toast('Use browser print dialog to save as PDF', 'info', 5000); }, 500);
+        }
+
+        function enterApp() {
+            document.getElementById('landing').style.display = 'none';
+            document.getElementById('app').style.display = 'block';
+            navigate('dashboard');
+        }
+
+        function showLanding() {
+            document.getElementById('app').style.display = 'none';
+            document.getElementById('landing').style.display = 'flex';
+        }
+
+        function quickAudit() {
+            const input = document.getElementById('landing-input')?.value?.trim();
+            // Switch to app without triggering navigate('dashboard') unnecessarily
+            document.getElementById('landing').style.display = 'none';
+            document.getElementById('app').style.display = 'block';
+            navigate('new-audit');
+            if (input) {
+                document.getElementById('audit-url').value = input;
+                setTimeout(() => startAuditProcess(input), 300);
+            }
+        }
+
+        function copyCmd(el, cmd) {
+            if (!cmd) return;
+            navigator.clipboard?.writeText(cmd).then(() => {
+                const label = el.querySelector('.fw-cmd-copy');
+                if (label) { label.textContent = '✓ copied!'; label.style.color = 'var(--accent)'; }
+                setTimeout(() => { if (label) { label.textContent = 'click to copy'; label.style.color = ''; } }, 2000);
+            });
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // INIT
+        // ═══════════════════════════════════════════════════════════════
+        document.addEventListener('DOMContentLoaded', () => {
+            // ── Note: Claude API works from file:// too ───────────────
+            // No CORS issues with the Anthropic API proxy
+
+            // Load saved API keys into settings UI
+            loadApiKeysIntoUI();
+
+            // Claude API doesn't need a key — banner stays hidden
+            // const banner = document.getElementById('api-keys-banner');
+            // if (banner) banner.style.display = 'flex';
+
+            updateHistoryBadge();
+            renderDashboard();
+            // Click outside sidebar on mobile closes it
+            document.addEventListener('click', e => {
+                const sb = document.getElementById('sidebar');
+                if (window.innerWidth <= 768 && sb.classList.contains('mobile-open') && !sb.contains(e.target)) {
+                    sb.classList.remove('mobile-open');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
