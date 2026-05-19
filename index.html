@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MapRank AI — Claude AI + Web Search SEO Audit Platform</title>
+    <title>MapRank AI — SerpAPI Google Maps SEO Audit Platform</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
@@ -2136,10 +2136,9 @@
         <section class="landing-hero">
             <div class="hero-bg"></div>
             <div class="hero-grid"></div>
-            <div class="hero-chip">✨ Powered by Claude AI + Web Search</div>
+            <div class="hero-chip">✨ Powered by SerpAPI — Dữ liệu thực Google Maps</div>
             <h1 class="hero-title">Rank Higher on<br><span class="grad">Google Maps</span></h1>
-            <p class="hero-sub">AI-powered SEO audit that finds real data about any business, analyzes competitors, and
-                generates a personalized action plan — no API keys needed, unlimited daily use.</p>
+            <p class="hero-sub">SEO audit sử dụng dữ liệu thực từ Google Maps qua SerpAPI — rating, reviews, photos, đối thủ cạnh tranh. Không phỏng đoán, 100% dữ liệu thực.</p>
 
             <div class="demo-widget">
                 <div style="font-size:.75rem;font-weight:600;color:var(--text-2);margin-bottom:10px;">🔍 Audit any
@@ -2182,14 +2181,14 @@
 
         <section class="features-section">
             <div class="section-label">How it works</div>
-            <div class="section-title">Everything powered by Claude AI + Web Search</div>
+            <div class="section-title">Dữ liệu thực từ Google Maps qua SerpAPI</div>
             <div class="section-sub">No Google Places API, no GBP API, no manual keys. Just enter a business name and
                 get real insights.</div>
             <div class="grid-3" style="gap:20px;">
                 <div class="feature-card">
                     <div class="feature-icon" style="background:var(--accent-dim);">🔍</div>
                     <div class="feature-title">Real Web Search</div>
-                    <div class="feature-desc">Claude searches the web in real-time to find actual business data,
+                    <div class="feature-desc">SerpAPI truy xuất trực tiếp Google Maps để lấy dữ liệu thực: rating, reviews, photos, giờ mở cửa, đối thủ.
                         ratings, reviews, and Google Maps presence — not mock data.</div>
                 </div>
                 <div class="feature-card">
@@ -2201,15 +2200,12 @@
                 <div class="feature-card">
                     <div class="feature-icon" style="background:var(--purple-dim);">🧠</div>
                     <div class="feature-title">AI Recommendations</div>
-                    <div class="feature-desc">Claude analyzes the data and generates a specific, actionable improvement
+                    <div class="feature-desc">MapRank tính điểm SEO từ dữ liệu thực và tạo kế hoạch cải thiện
                         plan tailored to your business's actual weaknesses.</div>
                 </div>
             </div>
         </section>
-        <footer class="landing-footer">© 2025 MapRank AI · Powered by Claude AI + Web Search · Không giới hạn
-            searches/day
-            Required
-        </footer>
+        <footer class="landing-footer">© 2025 MapRank AI · Powered by SerpAPI Google Maps</footer>
     </div>
 
     <!-- APP -->
@@ -2248,7 +2244,7 @@
                         <div class="user-av">AI</div>
                         <div class="user-info">
                             <div class="user-name">MapRank AI</div>
-                            <div class="user-plan">Claude AI Powered</div>
+                            <div class="user-plan">SerpAPI Powered</div>
                         </div>
                     </div>
                 </div>
@@ -2265,7 +2261,7 @@
                         </div>
                     </div>
                     <div class="header-right">
-                        <div class="ai-status" style="margin-right:4px;"><span class="ai-status-dot"></span>Claude Live
+                        <div class="ai-status" style="margin-right:4px;"><span class="ai-status-dot"></span>SerpAPI Live
                         </div>
                         <button class="hdr-btn" onclick="navigate('new-audit')"><span>+</span> New Audit</button>
                         <button class="hdr-icon-btn" onclick="exportReport()" title="Export PDF">📄</button>
@@ -2388,15 +2384,15 @@
                             style="display:none;background:var(--accent-dim);border:1px solid var(--border-accent);border-radius:var(--r-m);padding:12px 16px;align-items:center;gap:12px;flex-wrap:wrap;">
                             <span style="font-size:1rem;">✨</span>
                             <div style="flex:1;min-width:200px;">
-                                <div style="font-weight:700;font-size:.85rem;color:var(--accent)">Claude AI — Sẵn sàng!</div>
-                                <div style="font-size:.75rem;color:var(--text-2)">Không cần API key. Claude AI + Web Search hoạt động ngay, dùng không giới hạn trong ngày.</div>
+                                <div style="font-weight:700;font-size:.85rem;color:var(--accent)">SerpAPI — Nhập key để bắt đầu</div>
+                                <div style="font-size:.75rem;color:var(--text-2)">Nhập SerpAPI key trong Settings để lấy dữ liệu thực từ Google Maps.</div>
                             </div>
                         </div>
                         <div style="display:flex;flex-direction:column;align-items:center;padding:20px 0;">
                             <div class="audit-form-card fade-in">
                                 <div class="audit-form-title">🔍 Start New Audit</div>
-                                <div class="audit-form-subtitle">Claude AI tự động tìm kiếm web để lấy dữ liệu
-                                    doanh nghiệp thực tế — <strong style="color:var(--accent)">không cần API key, dùng không giới hạn!</strong></div>
+                                <div class="audit-form-subtitle">SerpAPI truy xuất Google Maps để lấy dữ liệu
+                                    doanh nghiệp thực tế — <strong style="color:var(--accent)">powered by SerpAPI!</strong></div>
 
                                 <div class="tabs mb-4" id="input-tabs">
                                     <button class="tab active" onclick="switchTab('url')">🔗 Maps URL</button>
@@ -2455,7 +2451,7 @@
                                     style="margin-top:20px;padding:14px;background:var(--bg-card-2);border-radius:var(--r-m);border:1px solid var(--border-accent);">
                                     <div
                                         style="font-size:.75rem;font-weight:600;color:var(--accent-bright);margin-bottom:8px;">
-                                        ✨ What Claude AI analyzes:</div>
+                                        🗺️ SerpAPI lấy dữ liệu thực:</div>
                                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;">
                                         <div
                                             style="font-size:.72rem;color:var(--text-2);display:flex;gap:4px;align-items:center;">
@@ -2486,7 +2482,7 @@
 
                                 <div style="margin-top:20px;display:flex;gap:10px;">
                                     <button class="btn btn-primary" style="flex:1;" onclick="runAudit()" id="run-btn">
-                                        <span>🚀</span> Run AI Audit
+                                        <span>🗺️</span> Run SerpAPI Audit
                                     </button>
                                     <button class="btn btn-secondary" onclick="runAuditDemo()">
                                         <span>⚡</span> Demo
@@ -2499,9 +2495,9 @@
                                 <div class="card" style="text-align:center;padding:36px;">
                                     <div class="spinner" style="margin:0 auto 16px;"></div>
                                     <div style="font-family:var(--font-d);font-size:1.1rem;font-weight:700;margin-bottom:6px;"
-                                        id="loading-text">Kết nối Claude AI...</div>
+                                        id="loading-text">Kết nối SerpAPI...</div>
                                     <div style="font-size:.78rem;color:var(--text-2);margin-bottom:20px;"
-                                        id="loading-sub">Claude đang tìm kiếm web để lấy dữ liệu thực</div>
+                                        id="loading-sub">Đang truy xuất dữ liệu thực từ Google Maps</div>
                                     <div class="progress-bar-wrap" style="margin:0 auto;">
                                         <div class="progress-bar">
                                             <div class="progress-fill" id="loading-progress" style="width:0%"></div>
@@ -2518,7 +2514,7 @@
                                             Web Search Trace</div>
                                         <div id="fn-trace"
                                             style="display:flex;flex-direction:column;gap:3px;font-family:'Courier New',monospace;font-size:.7rem;color:var(--text-2);">
-                                            <div>⏳ Waiting for Claude...</div>
+                                            <div>⏳ Waiting for SerpAPI...</div>
                                         </div>
                                     </div>
                                 </div>
@@ -2570,58 +2566,66 @@
                     <div class="page" id="page-settings">
                         <div class="grid-2" style="align-items:start;">
                             <div class="card">
-                                <div class="card-title mb-4">✨ AI Engine — Claude AI + Web Search <span
-                                        style="background:var(--accent-dim);color:var(--accent);font-size:.7rem;padding:2px 8px;border-radius:99px;font-weight:700;margin-left:6px;">NO KEY NEEDED</span>
+                                <div class="card-title mb-4">🔍 Data Engine — SerpAPI <span
+                                        style="background:var(--accent-dim);color:var(--accent);font-size:.7rem;padding:2px 8px;border-radius:99px;font-weight:700;margin-left:6px;">DỮ LIỆU THỰC</span>
                                 </div>
                                 <div class="ai-info-card mb-4">
                                     <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
                                         <div
                                             style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#10b981,#0891b2);display:flex;align-items:center;justify-content:center;font-size:1.2rem;">
-                                            🤖</div>
+                                            🗺️</div>
                                         <div>
-                                            <div style="font-weight:700;font-size:.9rem;">Claude Sonnet + Web Search Tool</div>
+                                            <div style="font-weight:700;font-size:.9rem;">SerpAPI — Google Maps Real Data</div>
                                             <div class="ai-status" style="margin-top:4px;" id="engine-status-dot">
                                                 <span class="ai-status-dot"></span>
-                                                <span id="engine-status-label">Sẵn sàng — không cần cấu hình</span>
+                                                <span id="engine-status-label">Đang kiểm tra...</span>
                                             </div>
                                         </div>
                                     </div>
                                     <div style="font-size:.78rem;color:var(--text-2);line-height:1.7;">
-                                        MapRank AI dùng <strong style="color:var(--text-1)">Claude Sonnet</strong>
-                                        với
-                                        <strong style="color:var(--text-1)">Web Search Tool</strong> — tìm dữ
-                                        liệu Maps thực tế.
-                                        <span style="color:var(--accent);font-weight:600;">Không giới hạn lần dùng mỗi ngày!</span>
+                                        MapRank AI dùng <strong style="color:var(--text-1)">SerpAPI</strong>
+                                        để truy cập <strong style="color:var(--text-1)">Google Maps API</strong> — lấy rating, reviews, photos, địa chỉ, giờ mở cửa thực tế.
+                                        <span style="color:var(--accent);font-weight:600;">Free plan: 250 searches/tháng!</span>
                                     </div>
                                 </div>
 
                                 <div
                                     style="font-size:.78rem;color:var(--text-2);padding:12px;background:var(--accent-dim);border-radius:var(--r-s);border:1px solid var(--border-accent);margin-bottom:12px;">
-                                    <div style="font-weight:700;color:var(--accent-bright);margin-bottom:8px;">🆓 Ưu điểm Claude API:</div>
+                                    <div style="font-weight:700;color:var(--accent-bright);margin-bottom:8px;">🗺️ SerpAPI Google Maps Engine:</div>
                                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;">
-                                        <div>✅ <strong>Không cần</strong> API key</div>
-                                        <div>✅ <strong>Không giới hạn</strong> /ngày</div>
-                                        <div>✅ <strong>Web Search</strong> thời gian thực</div>
-                                        <div>✅ JSON chính xác hơn</div>
+                                        <div>✅ <strong>Dữ liệu thực</strong> Google Maps</div>
+                                        <div>✅ <strong>Rating & Reviews</strong> thật</div>
+                                        <div>✅ Địa chỉ, giờ, SĐT thật</div>
+                                        <div>✅ Đối thủ cùng khu vực</div>
                                     </div>
+                                </div>
+
+                                <div style="margin-bottom:14px;">
+                                    <div class="input-label" style="margin-bottom:6px;">🔑 SerpAPI Key <a href="https://serpapi.com/manage-api-key" target="_blank" style="color:var(--accent);font-size:.72rem;margin-left:8px;">Lấy key miễn phí →</a></div>
+                                    <div class="input-group">
+                                        <span class="input-icon">🔑</span>
+                                        <input type="password" id="serp-key-input" class="input-field" placeholder="Paste SerpAPI key vào đây..." />
+                                    </div>
+                                    <div class="input-hint" style="margin-top:4px;">Key được lưu local trong browser, không gửi đi đâu khác. <a href="https://serpapi.com/users/sign_up?plan=free" target="_blank" style="color:var(--accent)">Đăng ký free</a> để nhận 250 searches/tháng.</div>
                                 </div>
 
                                 <div
                                     style="font-size:.78rem;color:var(--text-2);padding:12px;background:var(--bg-card-2);border-radius:var(--r-s);border:1px solid var(--border-0);margin-bottom:16px;">
-                                    <div style="font-weight:600;color:var(--text-1);margin-bottom:8px;">🔄 Search Flow:</div>
+                                    <div style="font-weight:600;color:var(--text-1);margin-bottom:8px;">🔄 Audit Flow với SerpAPI:</div>
                                     <div style="display:flex;flex-direction:column;gap:5px;">
-                                        <div>① Claude nhận query tên doanh nghiệp</div>
-                                        <div>② Tự gọi <code
-                                                style="color:var(--accent);background:var(--accent-dim);padding:1px 5px;border-radius:3px;">web_search(business_name)</code>
+                                        <div>① Nhập tên, địa chỉ, URL hoặc Place ID</div>
+                                        <div>② SerpAPI gọi <code
+                                                style="color:var(--accent);background:var(--accent-dim);padding:1px 5px;border-radius:3px;">engine=google_maps</code>
                                         </div>
-                                        <div>③ Tìm <code
-                                                style="color:var(--accent);background:var(--accent-dim);padding:1px 5px;border-radius:3px;">competitors(location)</code>
-                                            từ web</div>
-                                        <div>④ Phân tích dữ liệu thực → SEO audit JSON</div>
+                                        <div>③ Lấy dữ liệu thực: rating, reviews, ảnh, giờ mở cửa</div>
+                                        <div>④ Tính điểm SEO + lấy đối thủ cùng khu vực</div>
                                     </div>
                                 </div>
 
-                                <button class="btn btn-primary w-full" onclick="testApiKeys()">⚡ Test Claude API</button>
+                                <div style="display:flex;gap:8px;">
+                                    <button class="btn btn-secondary btn-sm flex-1" onclick="saveApiKeys()">💾 Lưu Key</button>
+                                    <button class="btn btn-primary flex-1" onclick="testApiKeys()">⚡ Test SerpAPI</button>
+                                </div>
                                 <div id="api-test-result" style="margin-top:10px;font-size:.78rem;"></div>
                             </div>
 
@@ -2748,143 +2752,298 @@
         };
 
         // ═══════════════════════════════════════════════════════════════
-        // API KEY MANAGER (Claude API — no key needed, handled by proxy)
+        // API KEY MANAGER — SerpAPI
         // ═══════════════════════════════════════════════════════════════
-        const KeyManager = { getClaude() { return ''; } };
+        const SerpKeyManager = {
+            getKey() { return StorageManager.load('serp_key') || ''; },
+            setKey(k) { if (k) StorageManager.save('serp_key', k); }
+        };
 
-        function saveApiKeys() {}
+        function saveApiKeys() {
+            const inp = document.getElementById('serp-key-input');
+            if (inp && inp.value.trim()) {
+                SerpKeyManager.setKey(inp.value.trim());
+                toast('SerpAPI Key đã lưu ✅', 'success');
+            } else {
+                toast('Nhập key trước khi lưu', 'warning');
+            }
+        }
 
         function loadApiKeysIntoUI() {
             const el = document.getElementById('engine-status-label');
-            if (el) el.textContent = 'Claude Sonnet — Sẵn sàng';
+            const k = SerpKeyManager.getKey();
+            if (el) el.textContent = k ? 'SerpAPI — Đã cấu hình ✅' : 'SerpAPI — Chưa có API key';
+            const inp = document.getElementById('serp-key-input');
+            if (inp && k) inp.value = k.slice(0, 8) + '••••••••••••••••••••';
         }
 
         async function testApiKeys() {
             const resultEl = document.getElementById('api-test-result');
-            resultEl.innerHTML = '<span style="color:var(--text-2)">🔄 Đang kiểm tra Claude API...</span>';
+            resultEl.innerHTML = '<span style="color:var(--text-2)">🔄 Đang kiểm tra SerpAPI...</span>';
+            const key = SerpKeyManager.getKey();
+            if (!key) { resultEl.innerHTML = '<div style="color:var(--red)">❌ Chưa có SerpAPI key — vào Settings → nhập key</div>'; return; }
             try {
-                const res = await fetch('https://api.anthropic.com/v1/messages', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'anthropic-version': '2023-06-01',
-                        'anthropic-dangerous-direct-browser-calls': 'true'
-                    },
-                    body: JSON.stringify({
-                        model: 'claude-sonnet-4-20250514',
-                        max_tokens: 10,
-                        messages: [{ role: 'user', content: 'Reply: OK' }]
-                    })
-                });
-                if (res.ok) {
-                    resultEl.innerHTML = '<div style="color:var(--accent)">✅ Claude API hoạt động — sẵn sàng audit!</div>';
+                const url = `https://serpapi.com/account.json?api_key=${encodeURIComponent(key)}`;
+                const res = await fetch(url);
+                const data = await res.json();
+                if (data.account_email) {
+                    resultEl.innerHTML = `<div style="color:var(--accent)">✅ SerpAPI hoạt động — ${data.account_email} | Searches left: ${data.searches_left ?? '?'}</div>`;
+                } else if (data.error) {
+                    resultEl.innerHTML = `<div style="color:var(--red)">⚠ ${data.error}</div>`;
                 } else {
-                    const err = await res.json().catch(() => ({}));
-                    resultEl.innerHTML = `<div style="color:var(--red)">⚠ Lỗi ${res.status}: ${err.error?.message || 'Unknown'}</div>`;
+                    resultEl.innerHTML = '<div style="color:var(--amber)">⚠ Phản hồi không xác định</div>';
                 }
             } catch (e) {
                 resultEl.innerHTML = `<div style="color:var(--red)">❌ Network error: ${e.message}</div>`;
             }
         }
         // ═══════════════════════════════════════════════════════════════
-        // CLAUDE ENGINE — Web Search + AI Knowledge fallback
+        // SERPAPI ENGINE — Google Maps real data
         // ═══════════════════════════════════════════════════════════════
-        const OpenAIEngine = {
-            MODEL: 'claude-sonnet-4-20250514',
-            API_BASE: 'https://api.anthropic.com/v1/messages',
+        const SerpAPIEngine = {
+            BASE: 'https://serpapi.com/search.json',
 
-            _parseJSON(text) {
-                if (!text) return null;
-                let s = text.replace(/```(?:json)?\s*/gi, '').replace(/```/g, '');
-                s = s.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, '');
-                const start = s.indexOf('{');
-                const end = s.lastIndexOf('}');
-                if (start === -1 || end === -1) return null;
-                const candidate = s.slice(start, end + 1);
-                try { return JSON.parse(candidate); } catch (_) { }
-                try { return JSON.parse(candidate.replace(/,(\s*[}\]])/g, '$1').replace(/[\r\n\t]/g, ' ')); } catch (_) { }
-                return null;
+            // Parse input: Google Maps URL, Place ID, or plain text query
+            parseInput(input) {
+                const s = input.trim();
+                // Place ID: starts with ChIJ or similar base64-like 27 chars
+                if (/^ChIJ[A-Za-z0-9_-]{22,}/.test(s)) return { type: 'place_id', value: s };
+                // Google Maps place URL
+                const placeM = s.match(/maps\/place\/([^\/\?@]+)/);
+                if (placeM) return { type: 'query', value: decodeURIComponent(placeM[1]).replace(/\+/g, ' ') };
+                // Google Maps search URL
+                const searchM = s.match(/maps\/search\/([^\/\?@]+)/);
+                if (searchM) return { type: 'query', value: decodeURIComponent(searchM[1]).replace(/\+/g, ' ') };
+                // maps.app.goo.gl short URL — use as query fallback
+                if (s.includes('maps.app.goo.gl') || s.includes('goo.gl/maps')) {
+                    return { type: 'query', value: 'Business from short link — please use full business name' };
+                }
+                return { type: 'query', value: s };
+            },
+
+            async _fetch(params) {
+                const url = this.BASE + '?' + new URLSearchParams(params).toString();
+                let res;
+                try { res = await fetch(url); }
+                catch (e) { throw new Error('Không kết nối được SerpAPI.\n① Kiểm tra internet\n② Không dùng file:// — cần web server\n\nChi tiết: ' + e.message); }
+                const data = await res.json();
+                if (data.error) throw new Error('SerpAPI: ' + data.error);
+                return data;
+            },
+
+            async searchMaps(apiKey, query) {
+                const data = await this._fetch({ engine: 'google_maps', type: 'search', q: query, api_key: apiKey, hl: 'en' });
+                const results = data.local_results;
+                if (!results || !results.length) throw new Error(`Không tìm thấy doanh nghiệp với: "${query}".\nThử nhập tên cụ thể hơn, ví dụ: "Highlands Coffee, Nguyễn Huệ, Q1, HCMC"`);
+                return { main: results[0], others: results.slice(1, 7) };
+            },
+
+            async fetchByPlaceId(apiKey, placeId) {
+                const data = await this._fetch({ engine: 'google_maps', place_id: placeId, api_key: apiKey, hl: 'en' });
+                const p = data.place_results;
+                if (!p) throw new Error('Không tìm thấy địa điểm với Place ID này.');
+                return p;
+            },
+
+            // ─── Scoring from real data ───────────────────────────────
+            calcScores(biz) {
+                const rating    = parseFloat(biz.rating) || 0;
+                const reviews   = parseInt(biz.reviews)  || 0;
+                const photos    = parseInt(biz.photos)   || 0;
+                const hasWeb    = !!(biz.website);
+                const hasPhone  = !!(biz.phone);
+                const hasHours  = !!(biz.operating_hours || biz.hours);
+                const hasDesc   = !!(biz.description);
+                const types     = biz.types || (biz.type ? [biz.type] : []);
+                const svcOpts   = biz.service_options || {};
+
+                // Profile (0-20)
+                let profile = 0;
+                if (biz.title || biz.name) profile += 4;
+                if (hasPhone)  profile += 4;
+                if (hasWeb)    profile += 4;
+                if (hasHours)  profile += 4;
+                if (hasDesc)   profile += 4;
+
+                // Reviews (0-25)
+                let revScore = 0;
+                revScore += rating >= 4.5 ? 12 : rating >= 4.0 ? 9 : rating >= 3.5 ? 5 : rating > 0 ? 2 : 0;
+                revScore += reviews >= 500 ? 13 : reviews >= 200 ? 10 : reviews >= 100 ? 7 : reviews >= 50 ? 5 : reviews >= 10 ? 3 : reviews > 0 ? 1 : 0;
+                revScore = Math.min(25, revScore);
+
+                // Photos (0-10)
+                let photoScore = photos >= 100 ? 10 : photos >= 50 ? 8 : photos >= 20 ? 6 : photos >= 10 ? 4 : photos >= 3 ? 2 : photos > 0 ? 1 : 3;
+
+                // Keywords (0-15)
+                let kwScore = 3;
+                if (types.length >= 3) kwScore += 5; else if (types.length >= 1) kwScore += 3;
+                if (hasDesc) kwScore += 5;
+                if ((biz.title || '').length > 15) kwScore += 2;
+                kwScore = Math.min(15, kwScore);
+
+                // Activity (0-10)
+                let activity = 3;
+                if (hasHours) activity += 4;
+                if (biz.open_state) activity += 3;
+                activity = Math.min(10, activity);
+
+                // Engagement (0-10)
+                let engage = 0;
+                if (reviews > 0 && rating > 0) engage += 3;
+                if (Object.values(svcOpts).some(v => v)) engage += 3;
+                if (biz.reserve_a_table || biz.order_online) engage += 4;
+                engage = Math.min(10, engage);
+
+                // Authority (0-10)
+                let auth = 2;
+                if (reviews >= 200) auth += 4; else if (reviews >= 50) auth += 2;
+                if (rating >= 4.2) auth += 2;
+                if (hasWeb) auth += 2;
+                auth = Math.min(10, auth);
+
+                // Technical (0-5)
+                let tech = 0;
+                if (biz.address) tech += 2;
+                if (hasPhone)   tech += 1;
+                if (hasWeb)     tech += 1;
+                if (types.length) tech += 1;
+                tech = Math.min(5, tech);
+
+                const total = profile + revScore + photoScore + kwScore + activity + engage + auth + tech;
+                const totalScore = Math.round((total / 105) * 100);
+
+                const issues = {
+                    profile:  (!hasWeb ? ['Thêm URL website vào profile'] : []).concat(!hasPhone ? ['Thêm số điện thoại'] : []).concat(!hasHours ? ['Cập nhật giờ mở cửa'] : []),
+                    reviews:  (reviews < 50 ? [`Chỉ có ${reviews} reviews — cần thêm để tăng hạng`] : []).concat(rating < 4.0 && rating > 0 ? [`Điểm ${rating}★ thấp — phản hồi reviews tiêu cực`] : []),
+                    photos:   (photos < 20 ? [`Chỉ có ${photos || '?'} ảnh — thêm ít nhất 20 ảnh chất lượng cao`] : []),
+                    keywords: (!hasDesc ? ['Chưa có mô tả doanh nghiệp — thêm từ khóa SEO'] : []),
+                    activity: (activity < 7 ? ['Đăng Google Posts thường xuyên để tăng visibility'] : []),
+                    engage:   (engage < 6 ? ['Bật tính năng đặt bàn hoặc đặt hàng online'] : []),
+                    auth:     (auth < 6 ? ['Xây dựng thêm reviews để tăng local authority'] : []),
+                    tech:     (!biz.address ? ['Cập nhật địa chỉ đầy đủ và chính xác'] : [])
+                };
+
+                return {
+                    metrics: {
+                        profile:     { score: profile,    max: 20, label: 'Profile Completeness',    issues: issues.profile.slice(0,2) },
+                        reviews:     { score: revScore,   max: 25, label: 'Review Quality & Volume',  issues: issues.reviews.slice(0,2) },
+                        photos:      { score: photoScore, max: 10, label: 'Photo Coverage',           issues: issues.photos.slice(0,1) },
+                        keywords:    { score: kwScore,    max: 15, label: 'Keyword Optimization',     issues: issues.keywords.slice(0,1) },
+                        activity:    { score: activity,   max: 10, label: 'Post Activity',            issues: issues.activity.slice(0,1) },
+                        engagement:  { score: engage,     max: 10, label: 'Customer Engagement',      issues: issues.engage.slice(0,1) },
+                        authority:   { score: auth,       max: 10, label: 'Local Authority',          issues: issues.auth.slice(0,1) },
+                        technical:   { score: tech,       max:  5, label: 'Technical Consistency',    issues: issues.tech.slice(0,1) }
+                    },
+                    totalScore
+                };
+            },
+
+            _quickScore(c) {
+                let s = 45;
+                const r = parseFloat(c.rating) || 0;
+                const v = parseInt(c.reviews) || 0;
+                if (r >= 4.5) s += 20; else if (r >= 4.0) s += 13; else if (r >= 3.5) s += 6;
+                if (v >= 500) s += 15; else if (v >= 200) s += 10; else if (v >= 50) s += 6; else if (v >= 10) s += 3;
+                if (c.website) s += 5; if (c.phone) s += 5;
+                return Math.min(98, s);
+            },
+
+            _buildRecommendations(metrics, totalScore) {
+                const critical = [];
+                for (const [key, m] of Object.entries(metrics)) {
+                    const pct = Math.round(m.score / m.max * 100);
+                    if (pct < 65 && m.issues?.length) {
+                        const iconMap = { reviews: '💬', photos: '📸', profile: '📝', keywords: '🔑', activity: '📅', engagement: '🤝', authority: '🏆', technical: '⚙️' };
+                        critical.push({ sev: pct < 40 ? 'critical' : 'warning', icon: iconMap[key] || '🔧', title: m.issues[0], desc: `${m.label}: ${m.score}/${m.max} điểm (${pct}%) — cần cải thiện`, action: 'Sửa ngay' });
+                    }
+                }
+                if (!critical.length) critical.push({ sev: 'info', icon: '📈', title: 'Profile hoàn chỉnh — tiếp tục xây dựng reviews', desc: 'Duy trì chất lượng và tương tác với khách hàng', action: 'Duy trì' });
+                return {
+                    summary: `Điểm tổng: ${totalScore}/100. Tập trung vào reviews (${metrics.reviews?.score}/25) và hoàn thiện profile (${metrics.profile?.score}/20) để tăng hạng Google Maps.`,
+                    critical: critical.slice(0, 5),
+                    plan: [
+                        { day: 'Ngày 1-3', task: 'Hoàn thiện thông tin còn thiếu trên Google Business Profile' },
+                        { day: 'Tuần 1', task: 'Thêm ít nhất 20 ảnh chất lượng cao về sản phẩm/dịch vụ' },
+                        { day: 'Tháng 1', task: 'Thu thập thêm 10-20 reviews thông qua QR code hoặc email' }
+                    ],
+                    content: ['Chụp ảnh sản phẩm/dịch vụ và đăng hàng tuần', 'Phản hồi mọi review (cả tích cực lẫn tiêu cực)']
+                };
             },
 
             async runAudit(query, onProgress) {
-                const lang = document.getElementById('lang-select')?.value || 'en';
-                const langNote = lang === 'vi' ? 'Sử dụng ngữ cảnh doanh nghiệp Việt Nam nhưng giữ JSON keys bằng tiếng Anh.' :
-                    lang === 'zh' ? 'Use Chinese business context but keep JSON keys in English.' : '';
+                if (location.protocol === 'file:') {
+                    document.getElementById('file-warning')?.classList.add('show');
+                    throw new Error('Cần chạy qua web server — không dùng được file://');
+                }
+                const apiKey = SerpKeyManager.getKey();
+                if (!apiKey || apiKey.length < 10) throw new Error('Chưa có SerpAPI key.\nVào Settings → nhập key → Lưu Key.\n\nĐăng ký free tại serpapi.com (250 searches/tháng).');
 
-                const JSON_SCHEMA = `{"business":{"name":"","category":"","address":"","city":"","country":"","rating":0,"totalReviews":0,"phone":"","website":"","hours":"","totalScore":0,"scoreLabel":"","metrics":{"profile":{"score":0,"max":20,"label":"Profile Completeness","issues":[]},"reviews":{"score":0,"max":25,"label":"Review Quality & Volume","issues":[]},"photos":{"score":0,"max":10,"label":"Photo Coverage","issues":[]},"keywords":{"score":0,"max":15,"label":"Keyword Optimization","issues":[]},"activity":{"score":0,"max":10,"label":"Post Activity","issues":[]},"engagement":{"score":0,"max":10,"label":"Customer Engagement","issues":[]},"authority":{"score":0,"max":10,"label":"Local Authority","issues":[]},"technical":{"score":0,"max":5,"label":"Technical Consistency","issues":[]}}},"competitors":[{"name":"","category":"","rating":0,"reviews":0,"photos":0,"score":0,"scoreChange":0,"rank":1,"address":""}],"recommendations":{"summary":"2-3 sentence summary","critical":[{"sev":"critical","icon":"💬","title":"","desc":"","action":"Fix"}],"plan":[{"day":"Day 1-3","task":""},{"day":"Week 1","task":""},{"day":"Month 1","task":""}],"content":["Post idea 1","Post idea 2"]}}`;
-
-                const SCORING = `Scoring: profile(0-20) completeness, reviews(0-25) rating*4+volume, photos(0-10), keywords(0-15), activity(0-10), engagement(0-10), authority(0-10), technical(0-5). totalScore=Math.round((sum/105)*100). NEVER return error JSON, always fill with 0/"" if unknown.`;
-
-                const SYSTEM = `You are a Google Maps SEO expert. Use the web_search tool to find REAL live data about the business from Google Maps, Google Search, and review sites. Search for the business, its competitors, reviews, and ratings. Then output ONLY a raw JSON object — no markdown, no explanation, no text before or after. ${langNote} Schema: ${JSON_SCHEMA} ${SCORING}`;
-
+                const parsed = this.parseInput(query);
                 const traceEl = document.getElementById('fn-trace');
+                if (traceEl) traceEl.innerHTML = `<div style="color:var(--accent)">🔍 engine: google_maps | ${parsed.type}: "${parsed.value.slice(0,40)}"</div>`;
 
-                if (traceEl) traceEl.innerHTML = `<div style="color:var(--accent)">🔍 Chế độ: Claude AI + Web Search (dữ liệu thực)</div>`;
-                onProgress(12, 'Kết nối Claude AI...', 'Đang khởi tạo web search');
+                onProgress(15, 'Kết nối SerpAPI...', 'Đang tìm kiếm Google Maps thực tế');
 
-                let res, data;
-                try {
-                    res = await fetch(this.API_BASE, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'anthropic-version': '2023-06-01',
-                            'anthropic-dangerous-direct-browser-calls': 'true'
-                        },
-                        body: JSON.stringify({
-                            model: this.MODEL,
-                            max_tokens: 8192,
-                            system: SYSTEM,
-                            tools: [{ type: 'web_search_20250305', name: 'web_search' }],
-                            messages: [{ role: 'user', content: `Audit this business for Google Maps SEO: "${query}". Search for its real data, rating, reviews, photos, competitors in the same area and category. Return only the JSON.` }]
-                        })
-                    });
-                } catch (e) {
-                    throw new Error('Network error khi gọi Claude API: ' + e.message);
+                let mainBiz, competitors;
+
+                if (parsed.type === 'place_id') {
+                    onProgress(25, 'Lấy chi tiết địa điểm...', `place_id: ${parsed.value.slice(0,14)}...`);
+                    if (traceEl) traceEl.innerHTML += `<div>📍 place_id lookup: ${parsed.value.slice(0,14)}...</div>`;
+                    const place = await this.fetchByPlaceId(apiKey, parsed.value);
+                    mainBiz = place;
+                    onProgress(50, 'Tìm đối thủ cạnh tranh...', 'Searching nearby businesses');
+                    const catQuery = (place.type || '') + ' ' + ((place.address || '').split(',').slice(-2).join(',').trim());
+                    try {
+                        const r = await this.searchMaps(apiKey, catQuery);
+                        competitors = r.others.filter(c => c.place_id !== parsed.value);
+                    } catch (_) { competitors = []; }
+                } else {
+                    onProgress(25, 'Tìm kiếm Google Maps...', `"${parsed.value.slice(0,40)}"`);
+                    if (traceEl) traceEl.innerHTML += `<div>🔍 Searching: "${parsed.value.slice(0,40)}"</div>`;
+                    const r = await this.searchMaps(apiKey, parsed.value);
+                    mainBiz = r.main;
+                    competitors = r.others;
                 }
 
-                if (!res.ok) {
-                    const err = await res.json().catch(() => ({}));
-                    throw new Error(`Claude API lỗi ${res.status}: ${err.error?.message || 'Unknown error'}`);
-                }
+                onProgress(65, 'Phân tích dữ liệu SEO...', 'Tính điểm từ dữ liệu thực tế Google Maps');
+                if (traceEl) traceEl.innerHTML += `<div style="color:var(--accent)">✓ Tìm thấy: ${mainBiz.title || mainBiz.name} | ⭐ ${mainBiz.rating || '?'} | ${mainBiz.reviews || 0} reviews</div>`;
 
-                data = await res.json();
-                onProgress(75, 'Phân tích dữ liệu...', 'Claude đang tính điểm SEO');
+                const { metrics, totalScore } = this.calcScores(mainBiz);
 
-                // Extract text from content blocks (may include tool_use + text blocks)
-                let text = '';
-                const content = data.content || [];
-                for (const block of content) {
-                    if (block.type === 'text') text += block.text;
-                    if (traceEl && block.type === 'tool_use' && block.name === 'web_search') {
-                        const q = block.input?.query || '';
-                        if (q) traceEl.innerHTML += `<div style="color:var(--blue);font-size:.75rem;">→ searched: "${q}"</div>`;
-                    }
-                }
+                onProgress(88, 'Tạo báo cáo SEO...', 'Đang tổng hợp khuyến nghị');
+                if (traceEl) traceEl.innerHTML += `<div>📊 Điểm tổng: ${totalScore}/100 — ${Object.keys(metrics).length} metrics</div>`;
 
-                if (!text && data.stop_reason && data.stop_reason !== 'end_turn') {
-                    throw new Error(`Claude dừng sớm (${data.stop_reason}). Thử tên doanh nghiệp cụ thể hơn.`);
-                }
-
-                onProgress(92, 'Cấu trúc báo cáo...', 'Đang phân tích kết quả SEO');
-                if (traceEl) traceEl.innerHTML += `<div style="color:var(--accent-bright)">✓ Hoàn tất — đang tạo báo cáo</div>`;
-
-                const parsed = this._parseJSON(text);
-                if (!parsed) throw new Error('Claude trả về JSON không hợp lệ. Thử tên doanh nghiệp cụ thể hơn.');
+                const biz = mainBiz;
+                const compData = competitors.map((c, i) => ({
+                    name: c.title || c.name || `Competitor ${i+1}`,
+                    category: c.type || c.types?.[0] || '',
+                    rating: parseFloat(c.rating) || 0,
+                    reviews: parseInt(c.reviews) || 0,
+                    photos: parseInt(c.photos) || 0,
+                    score: this._quickScore(c),
+                    scoreChange: 0, rank: i + 1,
+                    address: c.address || ''
+                }));
 
                 onProgress(100, 'Audit hoàn tất!', 'Báo cáo đã sẵn sàng');
-                return parsed;
-            },
-
-            // Quick stream text effect for AI-generated summaries
-            async streamText(el, text, delayMs = 16) {
-                el.textContent = '';
-                el.classList.add('streaming-cursor');
-                for (let i = 0; i < text.length; i++) {
-                    el.textContent += text[i];
-                    if (i % 4 === 0) await new Promise(r => setTimeout(r, delayMs));
-                }
-                el.classList.remove('streaming-cursor');
+                return {
+                    business: {
+                        name: biz.title || biz.name || query,
+                        category: biz.type || biz.types?.[0] || 'Business',
+                        address: biz.address || '',
+                        city: (biz.address || '').split(',').slice(-2).join(',').trim(),
+                        country: '',
+                        rating: parseFloat(biz.rating) || 0,
+                        totalReviews: parseInt(biz.reviews) || 0,
+                        phone: biz.phone || '',
+                        website: biz.website || '',
+                        hours: biz.open_state || (biz.operating_hours ? 'Xem giờ mở cửa' : 'Chưa có giờ mở cửa'),
+                        totalScore, scoreLabel: totalScore >= 85 ? 'Excellent' : totalScore >= 70 ? 'Good' : totalScore >= 55 ? 'Fair' : 'Needs Work',
+                        metrics
+                    },
+                    competitors: compData,
+                    recommendations: this._buildRecommendations(metrics, totalScore)
+                };
             }
         };
 
@@ -3059,7 +3218,7 @@
         // ═══════════════════════════════════════════════════════════════
         const PAGE_META = {
             'dashboard': { title: 'Dashboard', sub: 'Overview of all audits and performance' },
-            'new-audit': { title: 'New Audit', sub: 'Analyze any business with Claude AI' },
+            'new-audit': { title: 'New Audit', sub: 'Audit bằng dữ liệu thực từ Google Maps qua SerpAPI' },
             'audit-result': { title: 'Audit Results', sub: 'Detailed SEO analysis report' },
             'competitors': { title: 'Competitors', sub: 'Side-by-side competitor comparison' },
             'history': { title: 'Audit History', sub: 'All previous audits' },
@@ -3204,11 +3363,11 @@
         }
 
         const LOADING_STAGES = [
-            { pct: 10, text: 'Kết nối Claude AI...', sub: 'Khởi động Web Search Tool' },
-            { pct: 25, text: 'Claude đang tìm kiếm web...', sub: 'Đang tìm thông tin doanh nghiệp thực tế' },
-            { pct: 45, text: 'Claude phân tích đối thủ...', sub: 'Đang tìm đối thủ cạnh tranh gần đó trên Google Maps' },
-            { pct: 65, text: 'Phân tích chỉ số SEO...', sub: 'Claude tính điểm profile, reviews, photos, keywords' },
-            { pct: 82, text: 'Tạo đề xuất AI...', sub: 'Xây dựng kế hoạch hành động cá nhân hóa' },
+            { pct: 10, text: 'Kết nối SerpAPI...', sub: 'Khởi động Google Maps engine' },
+            { pct: 25, text: 'Tìm kiếm Google Maps...', sub: 'Đang lấy dữ liệu thực tế về doanh nghiệp' },
+            { pct: 45, text: 'Phân tích đối thủ cạnh tranh...', sub: 'Đang tìm đối thủ gần đó trên Google Maps' },
+            { pct: 65, text: 'Tính điểm SEO...', sub: 'Phân tích profile, reviews, photos, keywords' },
+            { pct: 82, text: 'Tạo đề xuất...', sub: 'Xây dựng kế hoạch hành động cá nhân hóa' },
             { pct: 93, text: 'Hoàn thiện báo cáo...', sub: 'Sắp xong — đang chuẩn bị kết quả' },
         ];
 
@@ -3242,7 +3401,7 @@
             const stageInterval = setInterval(advanceStage, 1800);
 
             try {
-                const result = await OpenAIEngine.runAudit(input, (pct, text, sub) => {
+                const result = await SerpAPIEngine.runAudit(input, (pct, text, sub) => {
                     // Override with actual API progress callbacks
                     progressEl.style.width = pct + '%';
                     pctEl.textContent = pct + '%';
@@ -3393,7 +3552,7 @@
     <div class="flex items-center gap-2 mb-3">
       <div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#0891b2);display:flex;align-items:center;justify-content:center;font-size:.85rem;">🧠</div>
       <div class="card-title">AI Analysis Summary</div>
-      <span class="badge badge-green">Claude AI</span>
+      <span class="badge badge-green">SerpAPI</span>
     </div>
     <div id="ai-summary" style="font-size:.88rem;color:var(--text-1);line-height:1.8;"></div>
   </div>`: ''}
@@ -3423,7 +3582,7 @@
                 // Stream summary text
                 if (rec.summary) {
                     const el = document.getElementById('ai-summary');
-                    if (el) OpenAIEngine.streamText(el, rec.summary, 12);
+                    if (el) el.textContent = rec.summary;
                 }
             }, 200);
 
@@ -3636,10 +3795,11 @@
         // INIT
         // ═══════════════════════════════════════════════════════════════
         document.addEventListener('DOMContentLoaded', () => {
-            // ── Note: Claude API works from file:// too ───────────────
-            // No CORS issues with the Anthropic API proxy
+            // ── Check file:// protocol — API calls will fail ──────────
+            if (location.protocol === 'file:') {
+                document.getElementById('file-warning')?.classList.add('show');
+            }
 
-            // Load saved API keys into settings UI
             loadApiKeysIntoUI();
 
             // Claude API doesn't need a key — banner stays hidden
