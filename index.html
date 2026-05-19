@@ -2420,16 +2420,16 @@
                                             <div class="input-group">
                                                 <span class="input-icon">🏪</span>
                                                 <input class="input-field" id="audit-name"
-                                                    placeholder="e.g. Highlands Coffee - Nguyen Hue"
+                                                    placeholder="VD: Nhà Trọ Green House, Nhà hàng Phở Hà Nội..."
                                                     onkeydown="if(event.key==='Enter')runAudit()">
                                             </div>
                                         </div>
                                         <div class="input-wrap">
-                                            <label class="input-label">Address / Location</label>
+                                            <label class="input-label">Địa chỉ / Khu vực <span style="color:var(--accent);font-size:.7rem;">(thêm để tìm chính xác hơn)</span></label>
                                             <div class="input-group">
                                                 <span class="input-icon">📍</span>
                                                 <input class="input-field" id="audit-address"
-                                                    placeholder="e.g. 167 Dong Khoi, District 1, HCMC"
+                                                    placeholder="VD: Quận 12, TP.HCM hoặc District 1, HCMC"
                                                     onkeydown="if(event.key==='Enter')runAudit()">
                                             </div>
                                         </div>
@@ -2853,15 +2853,84 @@
                 return data;
             },
 
+            // ─── Detect language / country from query text ────────────
+            _detectLocale(query) {
+                // Vietnamese: diacritical marks
+                if (/[àáâãèéêìíòóôõùúýăđơưạảấầẩẫậắằẳẵặẹẻẽếềểễệỉịọỏốồổỗộớờởỡợụủứừửữựỳỵỷỹ]/i.test(query)) {
+                    // ll = center of Vietnam (roughly Đà Nẵng), zoom 6 to cover whole country
+                    return { hl: 'vi', gl: 'vn', ll: '@16.0544,108.2022,6z' };
+                }
+                const q = query.toLowerCase();
+                if (/\b(hcmc|hồ chí minh|hochi minh|vietnam|việt nam|quận|quan |phường|phuong|tp\.hcm|ho chi minh)\b/.test(q)) {
+                    return { hl: 'vi', gl: 'vn', ll: '@10.7769,106.7009,12z' }; // HCMC center
+                }
+                if (/\b(hanoi|hà nội|ha noi)\b/.test(q)) {
+                    return { hl: 'vi', gl: 'vn', ll: '@21.0285,105.8542,12z' }; // Hà Nội center
+                }
+                if (/\b(da nang|đà nẵng)\b/.test(q)) {
+                    return { hl: 'vi', gl: 'vn', ll: '@16.0544,108.2022,12z' };
+                }
+                // Japanese
+                if (/[\u3040-\u30ff\u4e00-\u9faf]/.test(query)) return { hl: 'ja', gl: 'jp' };
+                // Korean
+                if (/[\uac00-\ud7af]/.test(query)) return { hl: 'ko', gl: 'kr' };
+                // Chinese
+                if (/[\u4e00-\u9fff]/.test(query)) return { hl: 'zh-cn', gl: 'cn' };
+                if (/\b(tokyo|osaka|kyoto|japan)\b/.test(q)) return { hl: 'ja', gl: 'jp' };
+                if (/\b(seoul|busan|korea)\b/.test(q)) return { hl: 'ko', gl: 'kr' };
+                return { hl: 'en', gl: 'us' };
+            },
+
             async searchMaps(apiKey, query) {
-                const data = await this._fetch({ engine: 'google_maps', type: 'search', q: query, api_key: apiKey, hl: 'en' });
-                const results = data.local_results;
-                if (!results || !results.length) throw new Error(`Không tìm thấy doanh nghiệp với: "${query}".\nThử nhập tên cụ thể hơn, ví dụ: "Highlands Coffee, Nguyễn Huệ, Q1, HCMC"`);
+                const locale = this._detectLocale(query);
+
+                // google_maps engine supports: hl, gl, ll — NOT "location" (that's google search only)
+                const baseParams = {
+                    engine: 'google_maps', type: 'search',
+                    q: query, api_key: apiKey,
+                    hl: locale.hl, gl: locale.gl,
+                };
+                if (locale.ll) baseParams.ll = locale.ll; // geographic center bias
+
+                // Attempt 1: with detected locale + coordinates
+                let data = await this._fetch(baseParams);
+                let results = data.local_results;
+
+                // Attempt 2: no ll/gl constraint (global index)
+                if (!results || !results.length) {
+                    const fallbackParams = { engine: 'google_maps', type: 'search', q: query, api_key: apiKey, hl: locale.hl };
+                    data = await this._fetch(fallbackParams);
+                    results = data.local_results;
+                }
+
+                // Attempt 3: strip diacritics and retry with gl only
+                if (!results || !results.length) {
+                    const simplified = query
+                        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+                        .replace(/[^\w\s,]/g, ' ').replace(/\s+/g, ' ').trim();
+                    if (simplified !== query) {
+                        const simplParams = { engine: 'google_maps', type: 'search', q: simplified, api_key: apiKey, hl: locale.hl, gl: locale.gl };
+                        if (locale.ll) simplParams.ll = locale.ll;
+                        data = await this._fetch(simplParams);
+                        results = data.local_results;
+                    }
+                }
+
+                if (!results || !results.length) {
+                    throw new Error(
+                        `Không tìm thấy doanh nghiệp với: "${query}".\n\n` +
+                        `Gợi ý:\n` +
+                        `• Thêm địa chỉ rõ hơn: "${query}, Quận 12, TP.HCM"\n` +
+                        `• Dùng tên tiếng Anh nếu có\n` +
+                        `• Dùng Place ID từ Google Maps URL (bắt đầu bằng ChIJ...)\n` +
+                        `• Ví dụ: "Highlands Coffee, Nguyễn Huệ, Q1, HCMC"`
+                    );
+                }
                 return { main: results[0], others: results.slice(1, 7) };
             },
 
             async fetchByPlaceId(apiKey, placeId) {
-                const data = await this._fetch({ engine: 'google_maps', place_id: placeId, api_key: apiKey, hl: 'en' });
+                const data = await this._fetch({ engine: 'google_maps', place_id: placeId, api_key: apiKey, hl: 'vi' });
                 const p = data.place_results;
                 if (!p) throw new Error('Không tìm thấy địa điểm với Place ID này.');
                 return p;
@@ -2937,7 +3006,7 @@
                 const issues = {
                     profile:  (!hasWeb ? ['Thêm URL website vào profile'] : []).concat(!hasPhone ? ['Thêm số điện thoại'] : []).concat(!hasHours ? ['Cập nhật giờ mở cửa'] : []),
                     reviews:  (reviews < 50 ? [`Chỉ có ${reviews} reviews — cần thêm để tăng hạng`] : []).concat(rating < 4.0 && rating > 0 ? [`Điểm ${rating}★ thấp — phản hồi reviews tiêu cực`] : []),
-                    photos:   (photos < 20 ? [`Chỉ có ${photos || '?'} ảnh — thêm ít nhất 20 ảnh chất lượng cao`] : []),
+                    photos:   (photos < 20 ? [`Chỉ có ${photos} ảnh — thêm ít nhất 20 ảnh chất lượng cao`] : []),
                     keywords: (!hasDesc ? ['Chưa có mô tả doanh nghiệp — thêm từ khóa SEO'] : []),
                     activity: (activity < 7 ? ['Đăng Google Posts thường xuyên để tăng visibility'] : []),
                     engage:   (engage < 6 ? ['Bật tính năng đặt bàn hoặc đặt hàng online'] : []),
@@ -2947,14 +3016,14 @@
 
                 return {
                     metrics: {
-                        profile:     { score: profile,    max: 20, label: 'Profile Completeness',    issues: issues.profile.slice(0,2) },
-                        reviews:     { score: revScore,   max: 25, label: 'Review Quality & Volume',  issues: issues.reviews.slice(0,2) },
-                        photos:      { score: photoScore, max: 10, label: 'Photo Coverage',           issues: issues.photos.slice(0,1) },
-                        keywords:    { score: kwScore,    max: 15, label: 'Keyword Optimization',     issues: issues.keywords.slice(0,1) },
-                        activity:    { score: activity,   max: 10, label: 'Post Activity',            issues: issues.activity.slice(0,1) },
-                        engagement:  { score: engage,     max: 10, label: 'Customer Engagement',      issues: issues.engage.slice(0,1) },
-                        authority:   { score: auth,       max: 10, label: 'Local Authority',          issues: issues.auth.slice(0,1) },
-                        technical:   { score: tech,       max:  5, label: 'Technical Consistency',    issues: issues.tech.slice(0,1) }
+                        profile:     { score: profile,    max: 20, label: 'Profile Completeness',    issues: issues.profile.slice(0,2),  data: { hasWeb, hasPhone, hasHours, hasDesc } },
+                        reviews:     { score: revScore,   max: 25, label: 'Review Quality & Volume',  issues: issues.reviews.slice(0,2),  data: { rating, reviews, target: reviews < 50 ? 50 : reviews < 200 ? 200 : 500 } },
+                        photos:      { score: photoScore, max: 10, label: 'Photo Coverage',           issues: issues.photos.slice(0,1),   data: { photos, target: 20 } },
+                        keywords:    { score: kwScore,    max: 15, label: 'Keyword Optimization',     issues: issues.keywords.slice(0,1), data: { hasDesc, typeCount: types.length } },
+                        activity:    { score: activity,   max: 10, label: 'Post Activity',            issues: issues.activity.slice(0,1), data: { hasHours } },
+                        engagement:  { score: engage,     max: 10, label: 'Customer Engagement',      issues: issues.engage.slice(0,1),   data: { hasOnline: !!(biz.reserve_a_table || biz.order_online) } },
+                        authority:   { score: auth,       max: 10, label: 'Local Authority',          issues: issues.auth.slice(0,1),     data: { reviews, rating } },
+                        technical:   { score: tech,       max:  5, label: 'Technical Consistency',    issues: issues.tech.slice(0,1),     data: { hasAddress: !!biz.address, hasPhone, hasWeb } }
                     },
                     totalScore
                 };
@@ -3058,9 +3127,12 @@
                         country: '',
                         rating: parseFloat(biz.rating) || 0,
                         totalReviews: parseInt(biz.reviews) || 0,
+                        photos: parseInt(biz.photos) || 0,
                         phone: biz.phone || '',
                         website: biz.website || '',
                         hours: biz.open_state || (biz.operating_hours ? 'Xem giờ mở cửa' : 'Chưa có giờ mở cửa'),
+                        reviewsLink: biz.reviews_link || biz.place_id ? `https://search.google.com/local/reviews?placeid=${biz.place_id}` : '',
+                        photosLink: biz.photos_link || biz.place_id ? `https://www.google.com/maps/place/?q=place_id:${biz.place_id}` : '',
                         totalScore, scoreLabel: totalScore >= 85 ? 'Excellent' : totalScore >= 70 ? 'Good' : totalScore >= 55 ? 'Fair' : 'Needs Work',
                         metrics
                     },
@@ -3325,13 +3397,21 @@
             // Issues from latest audit
             const issEl = document.getElementById('dash-issues');
             if (latestMetrics) {
-                const allIss = Object.values(latestMetrics).flatMap(m => (m.issues || []).map(i => ({ text: i, label: m.label })));
+                const allIss = Object.values(latestMetrics).flatMap(m => (m.issues || []).map(i => ({ text: i, label: m.label, data: m.data || {} })));
                 if (allIss.length) {
-                    issEl.innerHTML = allIss.slice(0, 4).map((iss, i) => `
-        <div class="issue-item issue-${i < 2 ? 'critical' : 'warning'}">
-          <div class="issue-icon">${i < 2 ? '🔴' : '🟡'}</div>
-          <div class="issue-body"><div class="issue-title">${iss.text}</div><div class="issue-desc">${iss.label}</div></div>
-        </div>`).join('');
+                    issEl.innerHTML = allIss.slice(0, 4).map((iss, i) => {
+                        const d = iss.data;
+                        let badge = '';
+                        if (iss.label === 'Review Quality & Volume' && d.reviews !== undefined)
+                            badge = `<span style="font-size:.65rem;font-weight:700;color:var(--amber);background:var(--amber-dim);padding:1px 7px;border-radius:99px;flex-shrink:0;">${d.reviews} reviews</span>`;
+                        else if (iss.label === 'Photo Coverage' && d.photos !== undefined)
+                            badge = `<span style="font-size:.65rem;font-weight:700;color:var(--amber);background:var(--amber-dim);padding:1px 7px;border-radius:99px;flex-shrink:0;">${d.photos} ảnh</span>`;
+                        return `<div class="issue-item issue-${i < 2 ? 'critical' : 'warning'}" style="align-items:center;">
+                          <div class="issue-icon">${i < 2 ? '🔴' : '🟡'}</div>
+                          <div class="issue-body" style="flex:1;"><div class="issue-title">${iss.text}</div><div class="issue-desc">${iss.label}</div></div>
+                          ${badge}
+                        </div>`;
+                    }).join('');
                 }
             }
 
@@ -3369,9 +3449,10 @@
         function getAuditInput() {
             if (activeTab === 'url') return document.getElementById('audit-url').value;
             if (activeTab === 'name') {
-                const n = document.getElementById('audit-name').value;
-                const a = document.getElementById('audit-address').value;
-                return n + (a ? ' ' + a : '');
+                const n = document.getElementById('audit-name').value.trim();
+                const a = document.getElementById('audit-address').value.trim();
+                // Join with comma so SerpAPI treats address as location context
+                return n + (a ? ', ' + a : '');
             }
             return document.getElementById('audit-place-id').value;
         }
@@ -3453,6 +3534,11 @@
                     name: biz.name,
                     category: biz.category,
                     address: biz.address,
+                    rating: biz.rating,
+                    totalReviews: biz.totalReviews,
+                    photos: biz.photos,
+                    reviewsLink: biz.reviewsLink || '',
+                    photosLink: biz.photosLink || '',
                     totalScore: biz.totalScore,
                     metrics: biz.metrics,
                     competitors: result.competitors,
@@ -3562,12 +3648,89 @@
       </div>
       <div class="card fade-in-delay-2">
         <div class="card-title mb-2">🔍 Issues Found</div>
-        <div style="display:flex;flex-direction:column;gap:6px;">
-          ${allIssues.slice(0, 5).map(iss => `<div style="display:flex;gap:8px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--border-0);">
-            <span style="color:var(--amber);flex-shrink:0;">⚠</span>
-            <div><div style="font-size:.8rem;font-weight:600;">${iss.text}</div><div style="font-size:.7rem;color:var(--text-2);">${iss.label}</div></div>
-          </div>`).join('')}
-          ${allIssues.length === 0 ? '<div style="color:var(--text-3);font-size:.8rem;padding:8px 0;">No issues detected — great profile!</div>' : ''}
+        <div style="display:flex;flex-direction:column;gap:0;">
+          ${(() => {
+            const auditRating = audit.rating || 0;
+            const auditReviews = audit.totalReviews || 0;
+            const auditPhotos = audit.photos || 0;
+            const reviewsLink = audit.reviewsLink || '';
+            const photosLink = audit.photosLink || '';
+
+            const issueRows = allIssues.slice(0, 6).map((iss, i) => {
+              const m = Object.values(metrics).find(x => x.label === iss.label);
+              const d = m?.data || {};
+              let badge = '';
+              let subInfo = '';
+              let linkBtn = '';
+
+              // Reviews issue
+              if (iss.label === 'Review Quality & Volume') {
+                const pct = Math.min(100, Math.round((auditReviews / (d.target || 50)) * 100));
+                badge = `<span style="background:var(--amber-dim);color:var(--amber);border:1px solid rgba(245,158,11,.25);padding:2px 9px;border-radius:99px;font-size:.7rem;font-weight:700;white-space:nowrap;">${auditReviews} / ${d.target || 50}</span>`;
+                subInfo = `<div style="margin-top:5px;display:flex;align-items:center;gap:6px;">
+                  <div style="flex:1;height:4px;background:var(--bg-hover);border-radius:99px;overflow:hidden;"><div style="height:100%;width:${pct}%;background:var(--amber);border-radius:99px;transition:width .6s;"></div></div>
+                  <span style="font-size:.65rem;color:var(--text-3);">${pct}% mục tiêu ${d.target || 50}</span>
+                </div>`;
+                if (reviewsLink) linkBtn = `<a href="${reviewsLink}" target="_blank" style="font-size:.68rem;color:var(--blue);text-decoration:none;white-space:nowrap;flex-shrink:0;padding:2px 8px;border:1px solid var(--blue-dim);border-radius:6px;background:var(--blue-dim);">Xem reviews ↗</a>`;
+              }
+              // Photos issue
+              else if (iss.label === 'Photo Coverage') {
+                const pct = Math.min(100, Math.round((auditPhotos / (d.target || 20)) * 100));
+                badge = `<span style="background:var(--amber-dim);color:var(--amber);border:1px solid rgba(245,158,11,.25);padding:2px 9px;border-radius:99px;font-size:.7rem;font-weight:700;white-space:nowrap;">${auditPhotos} / ${d.target || 20} ảnh</span>`;
+                subInfo = `<div style="margin-top:5px;display:flex;align-items:center;gap:6px;">
+                  <div style="flex:1;height:4px;background:var(--bg-hover);border-radius:99px;overflow:hidden;"><div style="height:100%;width:${pct}%;background:var(--amber);border-radius:99px;transition:width .6s;"></div></div>
+                  <span style="font-size:.65rem;color:var(--text-3);">${pct}% mục tiêu 20</span>
+                </div>`;
+                if (photosLink) linkBtn = `<a href="${photosLink}" target="_blank" style="font-size:.68rem;color:var(--blue);text-decoration:none;white-space:nowrap;flex-shrink:0;padding:2px 8px;border:1px solid var(--blue-dim);border-radius:6px;background:var(--blue-dim);">Xem ảnh ↗</a>`;
+              }
+              // Profile issue
+              else if (iss.label === 'Profile Completeness') {
+                const fields = [d.hasWeb, d.hasPhone, d.hasHours, d.hasDesc, true];
+                const filled = fields.filter(Boolean).length;
+                badge = `<span style="background:var(--amber-dim);color:var(--amber);border:1px solid rgba(245,158,11,.25);padding:2px 9px;border-radius:99px;font-size:.7rem;font-weight:700;white-space:nowrap;">${filled}/5 trường</span>`;
+                subInfo = `<div style="margin-top:5px;display:flex;gap:4px;flex-wrap:wrap;">
+                  ${[['Tên','✓'], ['SĐT', d.hasPhone ? '✓':'✗'], ['Web', d.hasWeb ? '✓':'✗'], ['Giờ', d.hasHours ? '✓':'✗'], ['Mô tả', d.hasDesc ? '✓':'✗']].map(([lbl, s]) =>
+                    `<span style="font-size:.62rem;padding:1px 6px;border-radius:4px;background:${s==='✓'?'var(--accent-dim)':'var(--red-dim)'};color:${s==='✓'?'var(--accent)':'var(--red)'};">${s} ${lbl}</span>`).join('')}
+                </div>`;
+              }
+              // Keyword issue
+              else if (iss.label === 'Keyword Optimization') {
+                badge = `<span style="background:var(--red-dim);color:var(--red);border:1px solid rgba(239,68,68,.25);padding:2px 9px;border-radius:99px;font-size:.7rem;font-weight:700;white-space:nowrap;">Chưa có mô tả</span>`;
+                subInfo = `<div style="margin-top:4px;font-size:.68rem;color:var(--text-3);">${d.typeCount || 0} danh mục · Thêm mô tả để xuất hiện trên nhiều từ khóa hơn</div>`;
+              }
+              // Rating low
+              else if (iss.text && iss.text.includes('★')) {
+                badge = `<span style="background:var(--red-dim);color:var(--red);border:1px solid rgba(239,68,68,.25);padding:2px 9px;border-radius:99px;font-size:.7rem;font-weight:700;white-space:nowrap;">${auditRating}★</span>`;
+                subInfo = `<div style="margin-top:4px;font-size:.68rem;color:var(--text-3);">Mục tiêu ≥ 4.0★ · Đang thiếu ${(4.0 - auditRating).toFixed(1)} điểm</div>`;
+              }
+              // Fallback
+              else {
+                badge = '';
+                subInfo = '';
+              }
+
+              const sev = i < 2 ? 'critical' : 'warning';
+              const sevColor = sev === 'critical' ? 'var(--red)' : 'var(--amber)';
+              const sevBg    = sev === 'critical' ? 'var(--red-dim)' : 'var(--amber-dim)';
+
+              return `<div style="display:flex;flex-direction:column;gap:0;padding:10px 0;border-bottom:1px solid var(--border-0);">
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <span style="color:${sevColor};flex-shrink:0;font-size:.85rem;">⚠</span>
+                  <div style="flex:1;min-width:0;">
+                    <div style="font-size:.8rem;font-weight:600;line-height:1.4;">${iss.text}</div>
+                    <div style="font-size:.68rem;color:var(--text-2);margin-top:1px;">${iss.label}</div>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
+                    ${badge}
+                    ${linkBtn}
+                  </div>
+                </div>
+                ${subInfo}
+              </div>`;
+            }).join('');
+
+            return issueRows || '<div style="color:var(--text-3);font-size:.8rem;padding:8px 0;">No issues detected — great profile!</div>';
+          })()}
         </div>
       </div>
     </div>
