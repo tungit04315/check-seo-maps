@@ -2783,8 +2783,10 @@
             const key = SerpKeyManager.getKey();
             if (!key) { resultEl.innerHTML = '<div style="color:var(--red)">❌ Chưa có SerpAPI key — vào Settings → nhập key</div>'; return; }
             try {
-                const url = `https://serpapi.com/account.json?api_key=${encodeURIComponent(key)}`;
-                const res = await fetch(url);
+                const target = `https://serpapi.com/account.json?api_key=${encodeURIComponent(key)}`;
+                const proxied = CORS_PROXY + encodeURIComponent(target);
+                const res = await fetch(proxied);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 const data = await res.json();
                 if (data.account_email) {
                     resultEl.innerHTML = `<div style="color:var(--accent)">✅ SerpAPI hoạt động — ${data.account_email} | Searches left: ${data.searches_left ?? '?'}</div>`;
@@ -2794,12 +2796,19 @@
                     resultEl.innerHTML = '<div style="color:var(--amber)">⚠ Phản hồi không xác định</div>';
                 }
             } catch (e) {
-                resultEl.innerHTML = `<div style="color:var(--red)">❌ Network error: ${e.message}</div>`;
+                resultEl.innerHTML = `<div style="color:var(--red)">❌ Network error: ${e.message}<br><span style="font-size:.75rem;color:var(--text-2)">CORS proxy (corsproxy.io) có thể đang bận — thử lại sau vài giây.</span></div>`;
             }
         }
         // ═══════════════════════════════════════════════════════════════
         // SERPAPI ENGINE — Google Maps real data
         // ═══════════════════════════════════════════════════════════════
+
+        // CORS proxy — browsers cannot call serpapi.com directly.
+        // corsproxy.io is a free open-source relay; it only sees the
+        // SerpAPI response, not your key if you prefer privacy use a
+        // self-hosted proxy instead.
+        const CORS_PROXY = 'https://corsproxy.io/?';
+
         const SerpAPIEngine = {
             BASE: 'https://serpapi.com/search.json',
 
@@ -2822,12 +2831,25 @@
             },
 
             async _fetch(params) {
-                const url = this.BASE + '?' + new URLSearchParams(params).toString();
+                const targetUrl = this.BASE + '?' + new URLSearchParams(params).toString();
+                // Route through CORS proxy so browsers can reach serpapi.com
+                const proxied = CORS_PROXY + encodeURIComponent(targetUrl);
                 let res;
-                try { res = await fetch(url); }
-                catch (e) { throw new Error('Không kết nối được SerpAPI.\n① Kiểm tra internet\n② Không dùng file:// — cần web server\n\nChi tiết: ' + e.message); }
-                const data = await res.json();
-                if (data.error) throw new Error('SerpAPI: ' + data.error);
+                try {
+                    res = await fetch(proxied);
+                } catch (e) {
+                    throw new Error(
+                        'Không kết nối được SerpAPI.\n' +
+                        '① Kiểm tra internet\n' +
+                        '② Không dùng file:// — cần web server\n' +
+                        '③ CORS proxy (corsproxy.io) có thể tạm thời không hoạt động\n\n' +
+                        'Chi tiết: ' + e.message
+                    );
+                }
+                if (!res.ok) throw new Error(`HTTP ${res.status} — ${res.statusText}`);
+                let data;
+                try { data = await res.json(); } catch (e) { throw new Error('Phản hồi không hợp lệ từ SerpAPI (không phải JSON).'); }
+                if (data && data.error) throw new Error('SerpAPI: ' + data.error);
                 return data;
             },
 
@@ -2949,6 +2971,7 @@
             },
 
             _buildRecommendations(metrics, totalScore) {
+                if (!metrics || typeof metrics !== 'object') metrics = {};
                 const critical = [];
                 for (const [key, m] of Object.entries(metrics)) {
                     const pct = Math.round(m.score / m.max * 100);
@@ -3011,7 +3034,7 @@
                 const { metrics, totalScore } = this.calcScores(mainBiz);
 
                 onProgress(88, 'Tạo báo cáo SEO...', 'Đang tổng hợp khuyến nghị');
-                if (traceEl) traceEl.innerHTML += `<div>📊 Điểm tổng: ${totalScore}/100 — ${Object.keys(metrics).length} metrics</div>`;
+                if (traceEl) traceEl.innerHTML += `<div>📊 Điểm tổng: ${totalScore}/100 — ${metrics ? Object.keys(metrics).length : 0} metrics</div>`;
 
                 const biz = mainBiz;
                 const compData = competitors.map((c, i) => ({
@@ -3113,6 +3136,7 @@
             renderRadar(id, metrics, competitorScores) {
                 this.destroy(id);
                 const ctx = document.getElementById(id); if (!ctx) return;
+                if (!metrics || typeof metrics !== 'object' || !Object.keys(metrics).length) return;
                 const labels = Object.values(metrics).map(m => m.label.split(' ').slice(0, 2).join('\n'));
                 const scores = Object.values(metrics).map(m => Math.round(m.score / m.max * 100));
                 const compScores = competitorScores || [88, 85, 82, 86, 78, 84, 80, 88];
@@ -3138,7 +3162,8 @@
                 const ctx = document.getElementById(id); if (!ctx) return;
                 const labels = ['Profile', 'Reviews', 'Photos', 'Keywords', 'Activity', 'Engagement'];
                 const keys = ['profile', 'reviews', 'photos', 'keywords', 'activity', 'engagement'];
-                const yourScores = keys.map(k => biz.metrics[k] ? Math.round(biz.metrics[k].score / biz.metrics[k].max * 100) : 0);
+                const safeMetrics = (biz && biz.metrics) ? biz.metrics : {};
+                const yourScores = keys.map(k => safeMetrics[k] ? Math.round(safeMetrics[k].score / safeMetrics[k].max * 100) : 0);
                 const comp1 = comps[0]; const comp2 = comps[2] || comps[1];
                 // Estimate competitor scores from their overall score
                 const compScore1 = comp1 ? Math.round(comp1.score) : 80;
